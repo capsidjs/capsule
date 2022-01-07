@@ -209,4 +209,4 @@ export function prep(name?: string | null, el?: Element) {
 (globalThis as any).capsule = {
   component,
   prep,
-}
+};

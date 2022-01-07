@@ -43,14 +43,14 @@ $(".some-class").each(function () {
 This is very common pattern, and this is very bad.
 
 The above code can been seen as a behavior of `.some-class` elements, and they
-use global query `$(query)`. Because they use global query here, they depends on
-the entire DOM tree of the page. If the page change anything in it, the behavior
-of the above code can potentially be changed.
+use global query `$(".some-target")`. Because they use global query here, they
+depend on the entire DOM tree of the page. If the page change anything in it,
+the behavior of the above code can potentially be changed.
 
-This is so unpredictable because any change in the page can affect the above
-class behavior. You can predict what happens with the above code only when you
-understand every details of the entire application, and that's often impossible
-when the application is middle to large size, and multiple people working on
+This is so unpredictable because any change in the page can affect the behavior
+of the above class. You can predict what happens with the above code only when
+you understand every details of the entire application, and that's often
+impossible when the application is large size, and multiple people working on
 that app.
 
 So how to fix this? We recommend you should use **local** queries.
@@ -68,11 +68,12 @@ $(".some-class").each(function () {
 ```
 
 The difference is `$(this).find(".some-target")` part. This selects the elements
-only under each `.some-class` element. So this code only have effects under each
-target of event handler.
+only under each `.some-class` element. So this code only have effects under the
+target of the event handler.
 
 This is very good because `.some-class`'s event handler only affects the inside
-of itself, which means the effect of the event handler is **local**.
+of itself, which means the effect of the event handler is **local**. The effects
+are closed inside of this class.
 
 `capsule` enforces this pattern by providing `query` function to event handlers
 which only finds elements under the given element.
@@ -233,7 +234,7 @@ import { component } from "https://deno.land/x/capsule/mod.ts";
 const { on } = component("my-component");
 
 on.mount = () => {
-  console.log("hello, I'm mounted")
+  console.log("hello, I'm mounted");
 };
 ```
 
