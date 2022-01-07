@@ -14,7 +14,7 @@
 # Motivation
 
 Virtual DOM frameworks are good for many use cases, but sometimes they are
-overkill for your use cases where you only needs a little bit of event handlers
+overkill for your use cases where you only need a little bit of event handlers
 and dom modifications.
 
 This `capsule` library explores simple event-driven DOM programming without
