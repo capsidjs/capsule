@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" width="210" alt="capsule" />
+<img src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" width="70" alt="capsule" />
 
 # Capsule
 
