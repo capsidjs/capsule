@@ -135,7 +135,7 @@ export function component(name: string): ComponentResult {
       el.classList.add(name);
     });
   };
-  const sub = (type: string) => is(`.sub\\:${type}`);
+  const sub = (type: string) => is(`sub:${type}`);
   const innerHTML = (html: string) => {
     hooks.push(({ el }) => {
       el.innerHTML = html;

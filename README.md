@@ -6,7 +6,7 @@
 
 # Features
 
-- **Small** DOM programming library. < **1.1 kb** gzipped
+- **Small** DOM programming library. **0.87 kb** gzipped
 - Use **plain JavaScript**, **plain HTML**. **No special syntax**.
 - **No dependencies**. **No build** steps.
 - Support **event-driven** style of frontend programming in a **new way**.

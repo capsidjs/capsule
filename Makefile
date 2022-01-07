@@ -27,7 +27,7 @@ dist:
 .PHONY: min
 min:
 	$(MAKE) dist
-	terser --compress --mangle -o dist.min.js -- dist.js
+	terser --compress --mangle --toplevel -o dist.min.js -- dist.js
 
 .PHONY: size
 size:
