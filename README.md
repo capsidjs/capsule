@@ -9,6 +9,15 @@
 - **No dependencies**. **No build** steps.
 - Support **event-driven** style of frontend programming in a **new way**.
 
+# Motivation
+
+Virtual DOM frameworks are good for many use cases, but sometimes they are
+overkill for your use cases where you only needs a little bit of event handlers
+and dom modifications.
+
+This `capsule` library explores simple event-driven DOM programming without
+virtual dom in a new style.
+
 # Slogans
 
 - Local query is good. Global query is bad.
@@ -22,8 +31,8 @@ When people use jQuery, they often do:
 ```
 $(".some-class").each(function () {
   $(this).on("some-event", () => {
-    $("some-random-query").each(function () {
-      // some random effect on this element
+    $(".some-target").each(function () {
+      // some effects on this element
     });
   });
 });
@@ -34,37 +43,104 @@ This is very common pattern, and this is very bad.
 The above code can been seen as a behavior of `.some-class` elements, and they
 use global query `$(query)`. Because they use global query here, they depends on
 the entire DOM tree of the page. If the page change anything in it, the behavior
-of the above code can potentially change.
+of the above code can potentially be changed.
 
-This behavior of this code is so unprectable because in a single page any event
-handler can change anything in a page, and the combination of those change can
-be infinitely complex.
+This is so unpredictable because any change in the page can affect the above
+class behavior. You can predict what happens with the above code only when you
+understand every details of the entire application, and that's often impossible
+when the application is middle to large size, and multiple people working on
+that app.
 
-To make this code more predictable, you should use local query.
+So how to fix this? We recommend you should use **local** queries.
+
+Let's see this example:
 
 ```js
 $(".some-class").each(function () {
   $(this).on("some-event", () => {
-    $(this).find("some-random-query").each(function () {
-      // some random effect on this element
+    $(this).find(".some-target").each(function () {
+      // some effects on this element
     });
   });
 });
 ```
 
-The difference is `$(this).find("some-random-query")` part. This selects the
-elements only under each `.some-class` element. So this code only have effect
-under each target of event handler.
+The difference is `$(this).find(".some-target")` part. This selects the elements
+only under each `.some-class` element. So this code only have effects under each
+target of event handler.
 
 This is very good because `.some-class`'s event handler only affects the inside
-of itself.
+of itself, which means the effect of the event handler is **local**.
 
-`capsule` enforces this pattern by providing `find` function which only finds
-elements under the given element.
+`capsule` enforces this pattern by providing `query` function to event handlers
+which only finds elements under the given element.
+
+```js
+const { on } = component("some-class");
+
+on.click = ({ query }) => {
+  query(".some-target").textContent = "clicked";
+};
+```
+
+Here query is the alias of `el.querySelector` and it finds `.some-target` only
+under it. So the effect is **local** here.
 
 ## Define behaviors based on HTML classes
 
+From our observation, skilled jQuery developers always define DOM behaviors
+based on HTML classes.
+
+We borrowed this pattern, and `capsule` allows you to define behavior only based
+on HTML classes, not random combination of query selectors.
+
+```html
+<div class="hello">John Doe</div>
+```
+
+```js
+const { on } = component("hello");
+
+on.__mount__ = () => {
+  alert(`Hello, I'm ${el.textContext}!`); // Alerts "Hello, I'm John Doe!"
+};
+```
+
 ## Use pubsub when making remote effect
+
+We generally recommend using only local queries, but how to make effects to the
+remote elements?
+
+We reommend using pubsub pattern here. By using this pattern, you can decouple
+those affecting and affected elements. If you decouple those elements, you can
+test those components independently by using events as I/O of those components.
+
+`capsule` library provides `pub` and `sub` APIs for encouraging this pattern.
+
+```
+const EVENT = "my-event";
+{
+  const { on } = component("publisher");
+
+  on.click = ({ pub }) => {
+    pub(EVENT);
+  };
+}
+
+{
+  const { on, sub } = component("subscriber");
+
+  sub(EVENT);
+
+  on[EVENT] = () => {
+    alert(`Got ${EVENT}!`);
+  };
+}
+```
+
+Note: `capsule` uses DOM Event as event payload, and `sub:EVENT` HTML class as
+registration to the event. When `pub(EVENT)` is called the CustomEvent of
+`EVENT` type are dispatched to the elements which have `sub:EVENT` class.
 
 # Install
 
@@ -88,7 +164,7 @@ import { component } from "@kt3k/capsule";
 
 # Examples
 
-Mirrors input value to other dom.
+Mirrors input value of `<input>` element to another dom.
 
 ```js
 import { component } from "https://deno.land/x/capsule/mod.ts";
@@ -120,8 +196,8 @@ const EVENT = "my-event";
 
   sub(EVENT);
 
-  on[EVENT] = (data) => {
-    console.log(data.hello); // => world!
+  on[EVENT] = ({ e }) => {
+    console.log(e.detail.hello); // => world!
   };
 }
 ```

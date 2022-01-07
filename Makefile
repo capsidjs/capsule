@@ -1,4 +1,4 @@
-# Copyright 2022 Yoshiya Hinosawa. All rights reserved. MIT license. 
+# Copyright 2022 Yoshiya Hinosawa. All rights reserved. MIT license.
 
 .PHONY: test
 test:
@@ -22,7 +22,7 @@ lint:
 
 .PHONY: dist
 dist:
-	deno bundle --config deno.json src/mod.ts > dist.js
+	deno bundle --config deno.json mod.ts > dist.js
 
 .PHONY: min
 min:
