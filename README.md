@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" width="210" alt="capsule" />
+
 # Capsule
 
 > Event-driven DOM programming in a new style
@@ -28,7 +30,7 @@ virtual dom in a new style.
 
 When people use jQuery, they often do:
 
-```
+```js
 $(".some-class").each(function () {
   $(this).on("some-event", () => {
     $(".some-target").each(function () {
@@ -117,7 +119,7 @@ test those components independently by using events as I/O of those components.
 
 `capsule` library provides `pub` and `sub` APIs for encouraging this pattern.
 
-```
+```js
 const EVENT = "my-event";
 {
   const { on } = component("publisher");
@@ -204,7 +206,7 @@ const EVENT = "my-event";
 
 Bubbling events.
 
-```
+```js
 import { component } from "https://deno.land/x/capsule/mod.ts";
 
 const { on } = component("my-component");
@@ -225,7 +227,7 @@ on.click = ({ emit }) => {
 
 Mount hooks.
 
-```
+```js
 import { component } from "https://deno.land/x/capsule/mod.ts";
 
 const { on } = component("my-component");
