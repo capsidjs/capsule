@@ -172,9 +172,9 @@ Mirrors input value of `<input>` element to another dom.
 ```js
 import { component } from "https://deno.land/x/capsule/mod.ts";
 
-const { on, query } = component("mirroring");
+const { on } = component("mirroring");
 
-on.input = (e, { query }) => {
+on.input = ({ query }) => {
   query(".src").textContent = query(".dest").value;
 };
 ```
@@ -195,7 +195,7 @@ const EVENT = "my-event";
 }
 
 {
-  const { sub } = component("sub-element");
+  const { on, sub } = component("sub-element");
 
   sub(EVENT);
 
@@ -233,7 +233,7 @@ import { component } from "https://deno.land/x/capsule/mod.ts";
 
 const { on } = component("my-component");
 
-on.mount = () => {
+on.__mount__ = () => {
   console.log("hello, I'm mounted");
 };
 ```
