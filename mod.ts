@@ -43,7 +43,7 @@ const registry: RegistryType = {};
  * @param assertion The assertion expression
  * @param message The assertion message
  */
-export default function assert(assertion: boolean, message: string): void {
+function assert(assertion: boolean, message: string): void {
   if (!assertion) {
     throw new Error(message);
   }
@@ -203,4 +203,10 @@ export function prep(name?: string | null, el?: Element) {
       registry[className],
     );
   });
+}
+
+// deno-lint-ignore no-explicit-any
+(globalThis as any).capsule = {
+  component,
+  prep,
 }

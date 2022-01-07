@@ -1,0 +1,13 @@
+<script type="module">
+import { component } from "./dist.js";
+const { on, query } = component("mirroring")
+
+on.input = ({ query }) => {
+  query(".dest").textContent = query(".src").value;
+};
+</script>
+
+<div class="mirroring">
+  <input class="src" />
+  <p class="dest">
+</div>
