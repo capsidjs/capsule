@@ -1,5 +1,9 @@
 <head>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg" href="capsule-logo.svg" />
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://packup.deno.dev/monaco-editor/min/vs/editor/editor.main.css" />
+  <title>Capsule | Event-driven DOM programming in a new style</title>
+  <meta name="description" content="📦 Zero-config web application packager for Deno 🦕">
 </head>
 
 <main class="max-w-screen-lg m-auto">
@@ -12,13 +16,13 @@
   <section class="example mt-10">
     <h2 class="text-lg font-medium">Mirroring example</h2>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-blue-100 p-5 mt-5">const { on } = component("mirroring");
+    <pre class="js-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5">const { on } = component("mirroring");
 
 on.input = ({ query }) => {
   query(".dest").textContent = query(".src").value;
 };</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-purple-100 p-5 mt-5"></pre>
+    <pre class="html-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5"></pre>
     <template>
 <div class="mirroring">
   <input class="src border" />
@@ -34,14 +38,13 @@ on.input = ({ query }) => {
   <section class="example">
     <h2 class="text-lg font-medium">Mount hook example</h2>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-blue-100 p-5 mt-5">const { on } = component("hello");
+    <pre class="js-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5">const { on } = component("hello");
 
 on.__mount__ = ({ el }) => {
-  console.log(`Hello, I'm ${el.textContent}! 👋`);
-  // Logs "Hello, I'm John Doe!". See the console
+  el.textContent = `Hello, I'm ${el.textContent}! 👋`;
 };</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-purple-100 p-5 mt-5"></pre>
+    <pre class="html-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5"></pre>
     <template>
 <div class="hello">John Doe</div>
     </template>
@@ -54,7 +57,7 @@ on.__mount__ = ({ el }) => {
   <section class="example">
     <h2 class="text-lg font-medium">Pubsub example</h2>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-blue-100 p-5 mt-5">const EVENT = "my-event";
+    <pre class="js-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5">const EVENT = "my-event";
 
 {
   const { on } = component("pub-element");
@@ -74,9 +77,9 @@ on.__mount__ = ({ el }) => {
   };
 }</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-purple-100 p-5 mt-5"></pre>
+    <pre class="html-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5"></pre>
     <template>
-<div class="pub-element">publisher (click here)</div>
+<button class="pub-element">publisher (click here)</button>
 <div class="sub-element">subscriber</div>
     </template>
     <h3 class="mt-10">Result</h3>
@@ -87,12 +90,24 @@ on.__mount__ = ({ el }) => {
   <img class="w-7 h-7" src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" />
   <a class="font-medium" href="https://github.com/capsidjs/capsule">Capsule</span>
 </footer>
+<script>
+var require = { paths: { vs: 'https://packup.deno.dev/monaco-editor/min/vs' } };
+</script>
+<script src="https://packup.deno.dev/monaco-editor/min/vs/loader.js"></script>
+<script>
+require(['vs/editor/editor.main'], () => {
+  monaco.editor.setTheme("vs-dark");
+});
+</script>
 <script type="module">
 import { component } from "./dist.js";
 component("example").on.__mount__ = ({ el, query }) => {
   const result = query(".result");
   result.appendChild(query("template").content.cloneNode(true));
   query(".html-source").textContent = result.innerHTML.trim();
-  eval(query(".js-source").textContent);
+  const js = query(".js-source").textContent;
+  eval(js)
+  monaco.editor.colorizeElement(query(".html-source"), { mimeType: "text/html", theme: "vs-dark" });
+  monaco.editor.colorizeElement(query(".js-source"), { mimeType: "text/javascript", theme: "vs-dark" });
 };
 </script>
