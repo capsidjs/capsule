@@ -1,14 +1,6 @@
-<script type="module">
-import { component } from "./dist.js";
-
-const { on, query } = component("mirroring")
-on.input = ({ query }) => {
-  query(".dest").textContent = query(".src").value;
-};
-</script>
-
 <h1>Mirroring example</h1>
-<pre>const { on, query } = component("mirroring");
+
+<pre class="example">const { on } = component("mirroring");
 
 on.input = ({ query }) => {
   query(".dest").textContent = query(".src").value;
@@ -20,59 +12,27 @@ on.input = ({ query }) => {
 
 <hr />
 
-<script type="module">
-import { component } from "./dist.js";
-const { on } = component("hello");
-on.__mount__ = ({ el }) => {
-  console.log(`Hello, I'm ${el.textContent}!`); // Alerts "Hello, I'm John Doe!"
-};
-</script>
-
 <h1>Hello example</h1>
-<pre>const { on } = component("hello");
+<pre class="example">const { on } = component("hello");
 
 on.__mount__ = ({ el }) => {
-  console.log(`Hello, I'm ${el.textContext}!`); // Alerts "Hello, I'm John Doe!"
-};</p>
+  console.log(`Hello, I'm ${el.textContent}! 👋`); // Logs "Hello, I'm John Doe!". See the console
+};</pre>
 
 <div class="hello">John Doe</div>
 
 <hr />
 
-<script type="module">
-import { component } from "./dist.js";
-
-const EVENT = "my-event";
-
-{
-  const { on } = component("pub-element");
-
-  on.click = ({ pub }) => {
-    pub(EVENT, { hello: "world!" });
-  };
-}
-
-{
-  const { on, sub } = component("sub-element");
-
-  sub(EVENT);
-
-  on[EVENT] = ({ e }) => {
-    console.log(e.detail.hello); // => world!
-  };
-}
-</script>
-
 <h1>Pubsub example</h1>
 
-<pre>
+<pre class="example">
 const EVENT = "my-event";
 
 {
   const { on } = component("pub-element");
 
   on.click = ({ pub }) => {
-    pub(EVENT, { hello: "world!" });
+    pub(EVENT, { hello: "clicked!" });
   };
 }
 
@@ -81,11 +41,15 @@ const EVENT = "my-event";
 
   sub(EVENT);
 
-  on[EVENT] = ({ e }) => {
-    console.log(e.detail.hello); // => world!
+  on[EVENT] = ({ e, el }) => {
+    el.textContent += " " + e.detail.hello;
   };
-}
-</pre>
+}</pre>
 
 <div class="pub-element">publisher</div>
 <div class="sub-element">subscriber</div>
+
+<script type="module">
+import { component } from "./dist.js";
+component("example").on.__mount__ = ({ el }) => eval(el.textContent);
+</script>
