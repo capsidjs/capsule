@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="70px" height="70px" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Group 3</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#0C1549" offset="0%"></stop>
+            <stop stop-color="#62446A" offset="100%"></stop>
+        </linearGradient>
+    </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="sketch" transform="translate(-304.000000, -649.000000)">
-            <g id="Group-3" transform="translate(304.000000, 649.000000)">
-                <circle id="Oval" fill="#050923" transform="translate(35.000000, 35.000000) scale(1, -1) translate(-35.000000, -35.000000) " cx="35" cy="35" r="35"></circle>
+        <g id="sketch" transform="translate(-631.000000, -775.000000)">
+            <g id="Group-3" transform="translate(631.000000, 775.000000)">
+                <circle id="Oval" fill="url(#linearGradient-1)" transform="translate(35.000000, 35.000000) scale(1, -1) translate(-35.000000, -35.000000) " cx="35" cy="35" r="35"></circle>
                 <path d="M35.0617415,57.8396359 L35.0617415,57.9639388 C23.3770108,57.9303966 13.9150739,48.4477574 13.9150739,36.7551644 C13.9150739,25.1124201 23.2965053,15.6608264 34.9124179,15.5473336 L34.912419,15.5473336 C34.9621111,15.5466458 35.011886,15.5463007 35.0617415,15.5463007 C40.9012325,15.5463007 45.6350753,20.2801435 45.6350753,26.1196345 C45.6350753,31.9591255 40.9012325,36.6929683 35.0617415,36.6929683 C29.2222505,36.6929683 24.4884077,41.4268111 24.4884077,47.2663021 C24.4884077,53.1057931 29.2222505,57.8396359 35.0617415,57.8396359 L35.0617415,57.8396359 Z" id="Combined-Shape" fill="#FFFFFF" transform="translate(29.775075, 36.755120) scale(1, -1) rotate(30.000000) translate(-29.775075, -36.755120) "></path>
             </g>
         </g>
