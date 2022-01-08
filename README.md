@@ -274,21 +274,36 @@ on.click[".btn"] = ({ e }) => {
 
 # API reference
 
-## `component(name: string): ComponentResult`
+```
+const { component, prep } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
+```
 
-## `ComponentResult.on[eventName]`
+## `component(name): ComponentResult`
 
-## `ComponentResult.on[eventName][selector]`
+This registers the component of the given name. This returns a `ComponentResult` which has the followin shape.
 
-## `ComponentResult.on.mount`
+```js
+interface ComponentResult {
+  on;
+  is;
+  sub;
+  innerHTML;
+}
+```
 
-## `ComponentResult.is(name: string): void`
+## `component().on[eventName] = EventHandler`
 
-## `ComponentResult.innerHTML(html: string): void`
+## `component().on[eventName][selector] = EventHandler`
 
-## `ComponentResult.sub(name: string): void`
+## `component().is(name: string): void`
+
+## `component().innerHTML(html: string): void`
+
+## `component().sub(name: string): void`
 
 ## `EventHandler`
+
+The event handler in `capsule` has the following signature. The first argument is `EventHandlerContext`, not `Event`.
 
 ```ts
 type EventHandler = (ctx: EventHandlerContext) => void;
@@ -306,7 +321,44 @@ interface EventHandlerContext {
 }
 ```
 
+`e` is the native DOM Event. You can call APIs like `.preventDefault()` or `.stopPropagation()` via this object.
+
+`el` is the DOM Element, which the event handler is bound to, and the event is dispatched on.
+
+`emit(type)` dispatches the event on this DOM Element. The event bubbles up. So the parent component can handle those events. If you'd like to communicate with the parent elements, then use this method to send information to parent elements.
+
+You can optionally attach data to the event. The attached data is available via `.detail` property of `CustomEvent` object.
+
+`pub(type)` dispatches the event to the remote elements which have `sub:type` class. For example:
+
+```
+pub("my-event")
+```
+
+This call dispatches `new CustomEvent("my-type")` to the elements which have `sub:my-type` class, like `<div class="sub:my-type"></div>`. The event doesn't bubbles up.
+
+This method is for communicating with the remote elements which aren't in parent-child relationship.
+
 ## `prep(name?: string, dom?: Element): void`
+
+This function initializes the elements with the given configuration. `component` call itself initializes the component of the given class name automatically when document got ready, but if elements are added after the initial page load, you need to call this method explicitly to initialize capsule's event handlers.
+
+```js
+// Initializes the all components in the entire page.
+prep();
+
+// Initializes only "my-component" components in the entire page.
+// You can use this when you only added "my-component" component.
+prep("my-compnent");
+
+// Initializes the all components only in `myDom` element.
+// You can use this when you only added something under `myDom`.
+prep(null, myDom);
+
+// Initializes only "my-component" components only in `myDom` element.
+// You can use this when you only added "my-component" under `myDom`.
+prep("my-component", myDom);
+```
 
 # License
 
