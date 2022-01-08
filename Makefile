@@ -10,6 +10,10 @@ test:
 cov:
 	deno test --config deno.json --coverage=cov -A --unstable --no-check
 
+.PHONY: lcov
+lcov:
+	deno coverage --lcov cov
+
 .PHONY: fmt
 fmt:
 	deno fmt --config deno.json
