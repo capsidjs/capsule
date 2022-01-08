@@ -6,19 +6,20 @@
 
 # Features
 
-- **Small** DOM programming library. **0.87 kb** gzipped
-- Use **plain JavaScript**, **plain HTML**. **No special syntax**.
+- **Lightweight** DOM programming library. **0.87 kb** gzipped
+- Uses **plain JavaScript** and **plain HTML**, requires **No special syntax**.
 - **No dependencies**. **No build** steps.
 - Support **event-driven** style of frontend programming in a **new way**.
+- **TypeScript** friendly.
 
 # Motivation
 
 Virtual DOM frameworks are good for many use cases, but sometimes they are
-overkill for your use cases where you only need a little bit of event handlers
+overkill for the use cases where you only need a little bit of event handlers
 and dom modifications.
 
-This `capsule` library explores simple event-driven DOM programming without
-virtual dom in a new style.
+This `capsule` library explores the new way of simple event-driven DOM programming without
+virtual dom.
 
 # Slogans
 
@@ -68,12 +69,8 @@ $(".some-class").each(function () {
 ```
 
 The difference is `$(this).find(".some-target")` part. This selects the elements
-only under each `.some-class` element. So this code only have effects under the
-target of the event handler.
-
-This is very good because `.some-class`'s event handler only affects the inside
-of itself, which means the effect of the event handler is **local**. The effects
-are closed inside of this class.
+only under each `.some-class` element. So this code only depends on the elements inside it, which means there is no global
+dependencies here.
 
 `capsule` enforces this pattern by providing `query` function to event handlers
 which only finds elements under the given element.
@@ -86,8 +83,8 @@ on.click = ({ query }) => {
 };
 ```
 
-Here query is the alias of `el.querySelector` and it finds `.some-target` only
-under it. So the effect is **local** here.
+Here `query` is the alias of `el.querySelector` and it finds `.some-target` only
+under it. So the dependency is **local** here.
 
 ## Define behaviors based on HTML classes
 
@@ -313,9 +310,16 @@ interface EventHandlerContext {
 
 # License
 
+MIT
+
 # Prior art
 
 - [capsid](https://github.com/capsidjs/capsid)
   - This library is heavily inspired by capsid.
 
-MIT
+# Projects with similar concepts
+
+- [Flight](https://flightjs.github.io/) by twitter
+  - Not under active development
+- [eddy.js](https://github.com/WebReflection/eddy)
+  - Archived
