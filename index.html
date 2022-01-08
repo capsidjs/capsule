@@ -16,13 +16,13 @@
   <section class="example mt-10">
     <h2 class="text-lg font-medium">Mirroring example</h2>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5">const { on } = component("mirroring");
+    <pre class="js-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5">const { on } = component("mirroring");
 
 on.input = ({ query }) => {
   query(".dest").textContent = query(".src").value;
 };</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5"></pre>
+    <pre class="html-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5"></pre>
     <template>
 <div class="mirroring">
   <input class="src border" />
@@ -38,13 +38,13 @@ on.input = ({ query }) => {
   <section class="example">
     <h2 class="text-lg font-medium">Mount hook example</h2>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5">const { on } = component("hello");
+    <pre class="js-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5">const { on } = component("hello");
 
 on.__mount__ = ({ el }) => {
   el.textContent = `Hello, I'm ${el.textContent}! 👋`;
 };</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5"></pre>
+    <pre class="html-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5"></pre>
     <template>
 <div class="hello">John Doe</div>
     </template>
@@ -57,7 +57,7 @@ on.__mount__ = ({ el }) => {
   <section class="example">
     <h2 class="text-lg font-medium">Pubsub example</h2>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5">const EVENT = "my-event";
+    <pre class="js-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5">const EVENT = "my-event";
 
 {
   const { on } = component("pub-element");
@@ -77,7 +77,7 @@ on.__mount__ = ({ el }) => {
   };
 }</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-gray-800 p-5 mt-5"></pre>
+    <pre class="html-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5"></pre>
     <template>
 <button class="pub-element">publisher (click here)</button>
 <div class="sub-element">subscriber</div>
