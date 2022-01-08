@@ -1,32 +1,58 @@
-<h1>Mirroring example</h1>
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-<pre class="example">const { on } = component("mirroring");
+<main class="max-w-screen-lg m-auto">
+  <h1 class="text-2xl font-semibold mt-20 flex items-center gap-2">
+    <img class="w-7 h-7" src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" />
+    Capsule examples
+  </h1>
+  <section class="example mt-10">
+    <h2 class="text-lg font-medium">Mirroring example</h2>
+    <h3 class="mt-10">JS</h3>
+    <pre class="js-source rounded-lg shadow-lg bg-blue-100 p-5 mt-5">const { on } = component("mirroring");
 
 on.input = ({ query }) => {
   query(".dest").textContent = query(".src").value;
 };</pre>
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source rounded-lg shadow-lg bg-purple-100 p-5 mt-5"></pre>
+    <template>
 <div class="mirroring">
-  <input class="src" />
-  <p class="dest">&nbsp;</p>
+  <input class="src border" />
+  <p class="dest"></p>
 </div>
+    </template>
+    <h3 class="mt-10">Result</h3>
+    <div class="result border rounded-lg p-5 mt-5"></div>
+  </section>
 
-<hr />
+  <hr class="my-10" />
 
-<h1>Hello example</h1>
-<pre class="example">const { on } = component("hello");
+  <section class="example">
+    <h2 class="text-lg font-medium">Hello example</h2>
+    <h3 class="mt-10">JS</h3>
+    <pre class="js-source rounded-lg shadow-lg bg-blue-100 p-5 mt-5">const { on } = component("hello");
 
 on.__mount__ = ({ el }) => {
-  console.log(`Hello, I'm ${el.textContent}! 👋`); // Logs "Hello, I'm John Doe!". See the console
+  console.log(`Hello, I'm ${el.textContent}! 👋`);
+  // Logs "Hello, I'm John Doe!". See the console
 };</pre>
-
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source rounded-lg shadow-lg bg-purple-100 p-5 mt-5"></pre>
+    <template>
 <div class="hello">John Doe</div>
+    </template>
+    <h3 class="mt-10">Result</h3>
+    <div class="result border rounded-lg p-5 mt-5"></div>
+  </section>
 
-<hr />
+  <hr class="my-10" />
 
-<h1>Pubsub example</h1>
-
-<pre class="example">
-const EVENT = "my-event";
+  <section class="example">
+    <h2 class="text-lg font-medium">Pubsub example</h2>
+    <h3 class="mt-10">JS</h3>
+    <pre class="js-source rounded-lg shadow-lg bg-blue-100 p-5 mt-5">const EVENT = "my-event";
 
 {
   const { on } = component("pub-element");
@@ -45,11 +71,26 @@ const EVENT = "my-event";
     el.textContent += " " + e.detail.hello;
   };
 }</pre>
-
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source rounded-lg shadow-lg bg-purple-100 p-5 mt-5"></pre>
+    <template>
 <div class="pub-element">publisher</div>
 <div class="sub-element">subscriber</div>
-
+    </template>
+    <h3 class="mt-10">Result</h3>
+    <div class="result border rounded-lg p-5 mt-5"></div>
+  </section>
+</main>
+<footer class="mt-10 py-10 flex items-center justify-center gap-2">
+  <img class="w-7 h-7" src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" />
+  <a class="font-medium" href="https://github.com/capsidjs/capsule">Capsule</span>
+</footer>
 <script type="module">
 import { component } from "./dist.js";
-component("example").on.__mount__ = ({ el }) => eval(el.textContent);
+component("example").on.__mount__ = ({ el, query }) => {
+  const result = query(".result");
+  result.appendChild(query("template").content.cloneNode(true));
+  query(".html-source").textContent = result.innerHTML.trim();
+  eval(query(".js-source").textContent);
+};
 </script>

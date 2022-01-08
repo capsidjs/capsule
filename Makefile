@@ -1,5 +1,7 @@
 # Copyright 2022 Yoshiya Hinosawa. All rights reserved. MIT license.
 
+TWD=deno run -A --allow-read=. --allow-write=style.css --allow-net=deno.land,esm.sh,cdn.esm.sh https://deno.land/x/twd@v0.4.8/cli.ts
+
 .PHONY: test
 test:
 	deno test --config deno.json -A --unstable --no-check --ignore=node
@@ -37,6 +39,15 @@ size:
 .PHONY: dnt
 dnt:
 	deno run -A dnt.ts
+
+.PHONY: twd
+twd:
+	$(TWD) -o style.css index.html
+
+.PHONY: twd-w
+twd-w:
+	$(TWD) -o style.css -w index.html
+
 
 .PHONY: npm-publish
 npm-publish:
