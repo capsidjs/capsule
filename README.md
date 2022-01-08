@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" width="70" alt="capsule" />
 
-# Capsule
+# Capsule v0.1.0
 
 > Event-driven DOM programming in a new style
 
@@ -147,10 +147,19 @@ registration to the event. When `pub(EVENT)` is called the CustomEvent of
 
 # Install
 
+Vanilla js:
+
+```html
+<script type="module">
+import { component } from "https://deno.land/x/capsule/dist.js";
+// ... your code
+</script>
+```
+
 Deno:
 
 ```js
-import { component } from "https://deno.land/x/capsule/mod.ts";
+import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
 ```
 
 Via npm:
@@ -170,7 +179,7 @@ import { component } from "@kt3k/capsule";
 Mirrors input value of `<input>` element to another dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
 
 const { on } = component("mirroring");
 
@@ -182,7 +191,7 @@ on.input = ({ query }) => {
 Pubsub.
 
 ```js
-import { component } from "https://deno.land/x/capsule/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
 
 const EVENT = "my-event";
 
@@ -208,7 +217,7 @@ const EVENT = "my-event";
 Bubbling events.
 
 ```js
-import { component } from "https://deno.land/x/capsule/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -226,15 +235,43 @@ on.click = ({ emit }) => {
 };
 ```
 
-Mount hooks.
+Mount hooks. If you register `__mount__` event handler, then it's called when the component is mounted.
 
 ```js
-import { component } from "https://deno.land/x/capsule/mod.ts";
+import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
 
 const { on } = component("my-component");
 
+// If `on.__mount__` is set, it's called at mount phase
 on.__mount__ = () => {
   console.log("hello, I'm mounted");
+};
+```
+
+Prevent default, stop propagation. The event object is available at `.e` property of handler context.
+
+```js
+import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
+
+const { on } = component("my-component");
+
+// If `on.__mount__` is set, it's called at mount phase
+on.click = ({ e }) => {
+  e.stopPropagation();
+  e.preventDefault();
+  console.log("hello, I'm mounted");
+};
+```
+
+Event delegate. You can assign handlers to `on.event[selector]` to use [event delegation](https://www.geeksforgeeks.org/event-delegation-in-javascript/) pattern.
+
+```js
+import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
+
+const { on } = component("my-component");
+
+on.click[".btn"] = ({ e }) => {
+  console.log(".btn is clicked!");
 };
 ```
 

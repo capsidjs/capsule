@@ -1,5 +1,4 @@
-// Copyright 2022 Yoshiya Hinosawa. All rights reserved. MIT license.
-
+/*! Capsule v0.1.0 | Copyright 2022 Yoshiya Hinosawa and Capsule contributors | MIT license */
 import { documentReady } from "./util.ts";
 
 interface Initializer {
