@@ -6,3 +6,5 @@ files:
     - https://deno.land/x/capsule@v%.%.%/mod.ts
   mod.ts:
     - Capsule v%.%.%
+  dnt.ts:
+    - 'version: "%.%.%"'
