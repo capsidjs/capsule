@@ -1,5 +1,5 @@
 /*! Capsule v0.1.0 | Copyright 2022 Yoshiya Hinosawa and Capsule contributors | MIT license */
-import { documentReady } from "./util.ts";
+import { documentReady, logEvent } from "./util.ts";
 
 interface Initializer {
   (el: Element): void;
@@ -103,19 +103,20 @@ export function component(name: string): ComponentResult {
   });
 
   const on = new Proxy({}, {
-    set(_obj: unknown, type: string, value: unknown): boolean {
+    set(_: unknown, type: string, value: unknown): boolean {
       // deno-lint-ignore no-explicit-any
-      return addEventBindHook(hooks, unmountHooks, type, value as any);
+      return addEventBindHook(name, hooks, unmountHooks, type, value as any);
     },
     // deno-lint-ignore no-explicit-any
-    get(_obj: unknown, type: string): any {
+    get(_: unknown, type: string): any {
       return new Proxy({}, {
-        set(_obj, selector: string, value: unknown): boolean {
-          // deno-lint-ignore no-explicit-any
+        set(_, selector: string, value: unknown): boolean {
           return addEventBindHook(
+            name,
             hooks,
             unmountHooks,
             type,
+            // deno-lint-ignore no-explicit-any
             value as any,
             selector,
           );
@@ -156,6 +157,7 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
 }
 
 function addEventBindHook(
+  name: string,
   hooks: Hook[],
   unmountHooks: Hook[],
   type: string,
@@ -183,6 +185,12 @@ function addEventBindHook(
           (node: Node) => node === e.target || node.contains(e.target as Node),
         )
       ) {
+        logEvent({
+          module: "💊",
+          color: "#e0407b",
+          e,
+          component: name,
+        });
         handler(createEventContext(e, el));
       }
     };
@@ -212,9 +220,3 @@ export function prep(name?: string | null, el?: Element) {
     );
   });
 }
-
-// deno-lint-ignore no-explicit-any
-(globalThis as any).capsule = {
-  component,
-  prep,
-};

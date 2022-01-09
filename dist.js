@@ -13,6 +13,18 @@ function documentReady() {
         checkReady();
     });
 }
+const boldColor = (color)=>`color: ${color}; font-weight: bold;`
+;
+const defaultEventColor = "#f012be";
+function logEvent({ component: component1 , e , module , color  }) {
+    const event = e.type;
+    console.groupCollapsed(`${module}> %c${event}%c on %c${component1}`, boldColor(color || defaultEventColor), "", boldColor("#1a80cc"));
+    console.log(e);
+    if (e.target) {
+        console.log(e.target);
+    }
+    console.groupEnd();
+}
 const registry = {};
 function assert(assertion, message) {
     if (!assertion) {
@@ -50,13 +62,13 @@ function component(name1) {
         prep(name1);
     });
     const on = new Proxy({}, {
-        set (_obj, type, value) {
-            return addEventBindHook(hooks, unmountHooks, type, value);
+        set (_, type, value) {
+            return addEventBindHook(name1, hooks, unmountHooks, type, value);
         },
-        get (_obj, type) {
+        get (_, type) {
             return new Proxy({}, {
-                set (_obj, selector, value) {
-                    return addEventBindHook(hooks, unmountHooks, type, value, selector);
+                set (_, selector, value) {
+                    return addEventBindHook(name1, hooks, unmountHooks, type, value, selector);
                 }
             });
         }
@@ -102,7 +114,7 @@ function createEventContext(e, el1) {
         }
     };
 }
-function addEventBindHook(hooks, unmountHooks, type, handler, selector) {
+function addEventBindHook(name, hooks, unmountHooks, type, handler, selector) {
     assert(typeof handler === "function", `Event handler must be a function, ${typeof handler} (${handler}) is given`);
     if (type === "__mount__") {
         hooks.push(handler);
@@ -116,6 +128,12 @@ function addEventBindHook(hooks, unmountHooks, type, handler, selector) {
         const listener = (e)=>{
             if (!selector || [].some.call(el.querySelectorAll(selector), (node)=>node === e.target || node.contains(e.target)
             )) {
+                logEvent({
+                    module: "💊",
+                    color: "#e0407b",
+                    e,
+                    component: name
+                });
                 handler(createEventContext(e, el));
             }
         };
@@ -140,10 +158,6 @@ function prep(name, el) {
         [].map.call((el || document).querySelectorAll(registry[className].sel), registry[className]);
     });
 }
-globalThis.capsule = {
-    component,
-    prep
-};
 export { component as component };
 export { prep as prep };
 

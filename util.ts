@@ -18,3 +18,39 @@ export function documentReady() {
     checkReady();
   });
 }
+
+interface LogEventMessage {
+  component: string;
+  e: Event;
+  module: string;
+  color?: string;
+}
+
+/** Gets the bold colored style */
+const boldColor = (color: string): string =>
+  `color: ${color}; font-weight: bold;`;
+
+const defaultEventColor = "#f012be";
+
+export function logEvent({
+  component,
+  e,
+  module,
+  color,
+}: LogEventMessage) {
+  const event = e.type;
+
+  console.groupCollapsed(
+    `${module}> %c${event}%c on %c${component}`,
+    boldColor(color || defaultEventColor),
+    "",
+    boldColor("#1a80cc"),
+  );
+  console.log(e);
+
+  if (e.target) {
+    console.log(e.target);
+  }
+
+  console.groupEnd();
+}
