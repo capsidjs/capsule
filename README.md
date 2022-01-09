@@ -18,8 +18,8 @@ Virtual DOM frameworks are good for many use cases, but sometimes they are
 overkill for the use cases where you only need a little bit of event handlers
 and dom modifications.
 
-This `capsule` library explores the new way of simple event-driven DOM programming without
-virtual dom.
+This `capsule` library explores the new way of simple event-driven DOM
+programming without virtual dom.
 
 # Slogans
 
@@ -69,8 +69,8 @@ $(".some-class").each(function () {
 ```
 
 The difference is `$(this).find(".some-target")` part. This selects the elements
-only under each `.some-class` element. So this code only depends on the elements inside it, which means there is no global
-dependencies here.
+only under each `.some-class` element. So this code only depends on the elements
+inside it, which means there is no global dependencies here.
 
 `capsule` enforces this pattern by providing `query` function to event handlers
 which only finds elements under the given element.
@@ -232,7 +232,8 @@ on.click = ({ emit }) => {
 };
 ```
 
-Mount hooks. If you register `__mount__` event handler, then it's called when the component is mounted.
+Mount hooks. If you register `__mount__` event handler, then it's called when
+the component is mounted.
 
 ```js
 import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
@@ -245,7 +246,8 @@ on.__mount__ = () => {
 };
 ```
 
-Prevent default, stop propagation. The event object is available at `.e` property of handler context.
+Prevent default, stop propagation. The event object is available at `.e`
+property of handler context.
 
 ```js
 import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
@@ -260,7 +262,9 @@ on.click = ({ e }) => {
 };
 ```
 
-Event delegate. You can assign handlers to `on.event[selector]` to use [event delegation](https://www.geeksforgeeks.org/event-delegation-in-javascript/) pattern.
+Event delegate. You can assign handlers to `on.event[selector]` to use
+[event delegation](https://www.geeksforgeeks.org/event-delegation-in-javascript/)
+pattern.
 
 ```js
 import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
@@ -280,7 +284,8 @@ const { component, prep } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
 
 ## `component(name): ComponentResult`
 
-This registers the component of the given name. This returns a `ComponentResult` which has the followin shape.
+This registers the component of the given name. This returns a `ComponentResult`
+which has the followin shape.
 
 ```ts
 interface ComponentResult {
@@ -303,7 +308,8 @@ interface ComponentResult {
 
 ## `EventHandler`
 
-The event handler in `capsule` has the following signature. The first argument is `EventHandlerContext`, not `Event`.
+The event handler in `capsule` has the following signature. The first argument
+is `EventHandlerContext`, not `Event`.
 
 ```ts
 type EventHandler = (ctx: EventHandlerContext) => void;
@@ -321,27 +327,40 @@ interface EventHandlerContext {
 }
 ```
 
-`e` is the native DOM Event. You can call APIs like `.preventDefault()` or `.stopPropagation()` via this object.
+`e` is the native DOM Event. You can call APIs like `.preventDefault()` or
+`.stopPropagation()` via this object.
 
-`el` is the DOM Element, which the event handler is bound to, and the event is dispatched on.
+`el` is the DOM Element, which the event handler is bound to, and the event is
+dispatched on.
 
-`emit(type)` dispatches the event on this DOM Element. The event bubbles up. So the parent component can handle those events. If you'd like to communicate with the parent elements, then use this method to send information to parent elements.
+`emit(type)` dispatches the event on this DOM Element. The event bubbles up. So
+the parent component can handle those events. If you'd like to communicate with
+the parent elements, then use this method to send information to parent
+elements.
 
-You can optionally attach data to the event. The attached data is available via `.detail` property of `CustomEvent` object.
+You can optionally attach data to the event. The attached data is available via
+`.detail` property of `CustomEvent` object.
 
-`pub(type)` dispatches the event to the remote elements which have `sub:type` class. For example:
+`pub(type)` dispatches the event to the remote elements which have `sub:type`
+class. For example:
 
 ```
 pub("my-event")
 ```
 
-This call dispatches `new CustomEvent("my-type")` to the elements which have `sub:my-type` class, like `<div class="sub:my-type"></div>`. The event doesn't bubbles up.
+This call dispatches `new CustomEvent("my-type")` to the elements which have
+`sub:my-type` class, like `<div class="sub:my-type"></div>`. The event doesn't
+bubbles up.
 
-This method is for communicating with the remote elements which aren't in parent-child relationship.
+This method is for communicating with the remote elements which aren't in
+parent-child relationship.
 
 ## `prep(name?: string, dom?: Element): void`
 
-This function initializes the elements with the given configuration. `component` call itself initializes the component of the given class name automatically when document got ready, but if elements are added after the initial page load, you need to call this method explicitly to initialize capsule's event handlers.
+This function initializes the elements with the given configuration. `component`
+call itself initializes the component of the given class name automatically when
+document got ready, but if elements are added after the initial page load, you
+need to call this method explicitly to initialize capsule's event handlers.
 
 ```js
 // Initializes the all components in the entire page.

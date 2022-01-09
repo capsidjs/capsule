@@ -6,4 +6,3 @@ import { DOMParser } from "https://raw.githubusercontent.com/b-fuze/deno-dom/9e4
 );
 // deno-lint-ignore no-explicit-any
 (document as any).readyState = "complete";
-

@@ -16,7 +16,7 @@ Deno.test("component.on.__mount__ is called when component is mounted", async ()
   const name = randomName();
   const { on } = component(name);
 
-  document.body.innerHTML = `<div class="${name}"></div>`
+  document.body.innerHTML = `<div class="${name}"></div>`;
 
   on.__mount__ = () => {
     p.resolve();

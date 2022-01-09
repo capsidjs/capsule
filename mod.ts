@@ -112,7 +112,13 @@ export function component(name: string): ComponentResult {
       return new Proxy({}, {
         set(_obj, selector: string, value: unknown): boolean {
           // deno-lint-ignore no-explicit-any
-          return addEventBindHook(hooks, unmountHooks, type, value as any, selector);
+          return addEventBindHook(
+            hooks,
+            unmountHooks,
+            type,
+            value as any,
+            selector,
+          );
         },
       });
     },
