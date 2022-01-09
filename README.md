@@ -282,7 +282,7 @@ const { component, prep } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
 
 This registers the component of the given name. This returns a `ComponentResult` which has the followin shape.
 
-```js
+```ts
 interface ComponentResult {
   on;
   is;

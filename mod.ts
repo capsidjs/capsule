@@ -2,7 +2,7 @@
 import { documentReady } from "./util.ts";
 
 interface Initializer {
-  (el: Element, comp?: unknown): void;
+  (el: Element): void;
   /** The elector for the component */
   sel: string;
 }
@@ -11,6 +11,7 @@ interface RegistryType {
 }
 
 interface ComponentResult {
+  // TODO(kt3k): type this
   // deno-lint-ignore no-explicit-any
   on: any;
   is(name: string): void;
@@ -66,17 +67,17 @@ export function component(name: string): ComponentResult {
 
   const initClass = `${name}-💊`;
 
+  // Hooks for mount phase
   const hooks: Hook[] = [({ el }) => {
     // FIXME(kt3k): the below can be written as .add(name, initClass)
     // when deno_dom fixes add class.
     el.classList.add(name);
     el.classList.add(initClass);
   }];
+  // Hooks for unmount phase
+  const unmountHooks: Hook[] = [];
 
-  /**
-   * Initializes the html element by the given configuration.
-   * @param el The html element
-   */
+  /** Initializes the html element by the given configuration. */
   const initializer = (el: Element) => {
     if (!el.classList.contains(initClass)) {
       const e = new CustomEvent("__mount__", { bubbles: false });
@@ -89,8 +90,6 @@ export function component(name: string): ComponentResult {
       hooks.forEach((cb) => {
         cb(ctx);
       });
-      // dispatches __mount__ event
-      el.dispatchEvent(e);
     }
   };
 
@@ -105,25 +104,15 @@ export function component(name: string): ComponentResult {
 
   const on = new Proxy({}, {
     set(_obj: unknown, type: string, value: unknown): boolean {
-      assert(
-        typeof value === "function",
-        `Event handler must be a function, ${typeof value} (${value}) is given`,
-      );
       // deno-lint-ignore no-explicit-any
-      hooks.push(createEventBindHook(type, value as any));
-      return true;
+      return addEventBindHook(hooks, unmountHooks, type, value as any);
     },
     // deno-lint-ignore no-explicit-any
     get(_obj: unknown, type: string): any {
       return new Proxy({}, {
         set(_obj, selector: string, value: unknown): boolean {
-          assert(
-            typeof value === "function",
-            `Event handler must be a function, ${typeof value} (${value}) is given`,
-          );
           // deno-lint-ignore no-explicit-any
-          hooks.push(createEventBindHook(type, value as any, selector));
-          return true;
+          return addEventBindHook(hooks, unmountHooks, type, value as any, selector);
         },
       });
     },
@@ -149,9 +138,8 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
     e,
     el,
     query: (s: string) => el.querySelector(s),
-    pub: (type: string, v: unknown, selector?: string) => {
-      const s = selector ?? `.sub\\:${type}`;
-      document.querySelectorAll(s).forEach((el) => {
+    pub: (type: string, v: unknown) => {
+      document.querySelectorAll(`.sub\\:${type}`).forEach((el) => {
         el.dispatchEvent(new CustomEvent(type, { bubbles: false, detail: v }));
       });
     },
@@ -161,12 +149,26 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
   };
 }
 
-function createEventBindHook(
+function addEventBindHook(
+  hooks: Hook[],
+  unmountHooks: Hook[],
   type: string,
   handler: (ctx: ComponentEventContext) => void,
   selector?: string,
-): Hook {
-  return ({ el }) => {
+): boolean {
+  assert(
+    typeof handler === "function",
+    `Event handler must be a function, ${typeof handler} (${handler}) is given`,
+  );
+  if (type === "__mount__") {
+    hooks.push(handler);
+    return true;
+  }
+  if (type === "__unmount__") {
+    unmountHooks.push(handler);
+    return true;
+  }
+  hooks.push(({ el }) => {
     const listener = (e: Event) => {
       if (
         !selector ||
@@ -178,11 +180,12 @@ function createEventBindHook(
         handler(createEventContext(e, el));
       }
     };
-    listener.remove = () => {
+    unmountHooks.push(() => {
       el.removeEventListener(type, listener);
-    };
+    });
     el.addEventListener(type, listener);
-  };
+  });
+  return true;
 }
 
 export function prep(name?: string | null, el?: Element) {

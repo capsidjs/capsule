@@ -32,6 +32,7 @@ function component(name1) {
             el.classList.add(initClass);
         }
     ];
+    const unmountHooks = [];
     const initializer = (el)=>{
         if (!el.classList.contains(initClass)) {
             const e = new CustomEvent("__mount__", {
@@ -41,7 +42,6 @@ function component(name1) {
             hooks.forEach((cb)=>{
                 cb(ctx);
             });
-            el.dispatchEvent(e);
         }
     };
     initializer.sel = `.${name1}:not(.${initClass})`;
@@ -51,16 +51,12 @@ function component(name1) {
     });
     const on = new Proxy({}, {
         set (_obj, type, value) {
-            assert(typeof value === "function", `Event handler must be a function, ${typeof value} (${value}) is given`);
-            hooks.push(createEventBindHook(type, value));
-            return true;
+            return addEventBindHook(hooks, unmountHooks, type, value);
         },
         get (_obj, type) {
             return new Proxy({}, {
                 set (_obj, selector, value) {
-                    assert(typeof value === "function", `Event handler must be a function, ${typeof value} (${value}) is given`);
-                    hooks.push(createEventBindHook(type, value, selector));
-                    return true;
+                    return addEventBindHook(hooks, unmountHooks, type, value, selector);
                 }
             });
         }
@@ -90,9 +86,8 @@ function createEventContext(e, el1) {
         el: el1,
         query: (s)=>el1.querySelector(s)
         ,
-        pub: (type, v, selector)=>{
-            const s = selector ?? `.sub\\:${type}`;
-            document.querySelectorAll(s).forEach((el)=>{
+        pub: (type, v)=>{
+            document.querySelectorAll(`.sub\\:${type}`).forEach((el)=>{
                 el.dispatchEvent(new CustomEvent(type, {
                     bubbles: false,
                     detail: v
@@ -107,19 +102,29 @@ function createEventContext(e, el1) {
         }
     };
 }
-function createEventBindHook(type, handler, selector) {
-    return ({ el  })=>{
+function addEventBindHook(hooks, unmountHooks, type, handler, selector) {
+    assert(typeof handler === "function", `Event handler must be a function, ${typeof handler} (${handler}) is given`);
+    if (type === "__mount__") {
+        hooks.push(handler);
+        return true;
+    }
+    if (type === "__unmount__") {
+        unmountHooks.push(handler);
+        return true;
+    }
+    hooks.push(({ el  })=>{
         const listener = (e)=>{
             if (!selector || [].some.call(el.querySelectorAll(selector), (node)=>node === e.target || node.contains(e.target)
             )) {
                 handler(createEventContext(e, el));
             }
         };
-        listener.remove = ()=>{
+        unmountHooks.push(()=>{
             el.removeEventListener(type, listener);
-        };
+        });
         el.addEventListener(type, listener);
-    };
+    });
+    return true;
 }
 function prep(name, el) {
     let classNames;
