@@ -6,11 +6,12 @@
 
 # Features
 
-- **Lightweight** DOM programming library. **0.87 kb** gzipped
+- Supports **event-driven** style of frontend programming in a **new way**.
+- **Lightweight** library. **1.1 kb** gzipped. **No dependencies**. **No build** steps.
 - Uses **plain JavaScript** and **plain HTML**, requires **No special syntax**.
-- **No dependencies**. **No build** steps.
-- Support **event-driven** style of frontend programming in a **new way**.
 - **TypeScript** friendly.
+
+[See live examples](https://capsidjs.github.io/capsule/)
 
 # Motivation
 
