@@ -17,6 +17,7 @@ const boldColor = (color)=>`color: ${color}; font-weight: bold;`
 ;
 const defaultEventColor = "#f012be";
 function logEvent({ component: component1 , e , module , color  }) {
+    if (typeof __DEV__ === "boolean" && !__DEV__) return;
     const event = e.type;
     console.groupCollapsed(`${module}> %c${event}%c on %c${component1}`, boldColor(color || defaultEventColor), "", boldColor("#1a80cc"));
     console.log(e);
@@ -61,9 +62,18 @@ function component(name1) {
     documentReady().then(()=>{
         prep(name1);
     });
-    const on = new Proxy({}, {
+    const on = new Proxy(()=>{}, {
         set (_, type, value) {
             return addEventBindHook(name1, hooks, unmountHooks, type, value);
+        },
+        apply (_target, _thisArg, args) {
+            const selector = args[0];
+            assert(typeof selector === "string", "Delegation selector must be a string. ${typeof selector} is given.");
+            return new Proxy({}, {
+                set (_, type, value) {
+                    return addEventBindHook(name1, hooks, unmountHooks, type, value, selector);
+                }
+            });
         },
         get (_, type) {
             return new Proxy({}, {
@@ -97,6 +107,8 @@ function createEventContext(e, el1) {
         e,
         el: el1,
         query: (s)=>el1.querySelector(s)
+        ,
+        queryAll: (s)=>el1.querySelectorAll(s)
         ,
         pub: (type, v)=>{
             document.querySelectorAll(`.sub\\:${type}`).forEach((el)=>{
