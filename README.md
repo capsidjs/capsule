@@ -279,33 +279,96 @@ on(".btn").click = ({ e }) => {
 
 # API reference
 
-```
+```ts
 const { component, prep } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
 ```
 
 ## `component(name): ComponentResult`
 
 This registers the component of the given name. This returns a `ComponentResult`
-which has the followin shape.
+which has the following shape.
 
 ```ts
 interface ComponentResult {
-  on;
-  is;
-  sub;
-  innerHTML;
+  on: EventRegistryProxy;
+  is(name: string);
+  sub(type: string);
+  innerHTML(html: string);
+}
+
+interface EventRegistry {
+  [key: string]: EventHandler;
+  (selector: string): {
+    [key: string]: EventHandler;
+  };
 }
 ```
 
 ## `component().on[eventName] = EventHandler`
 
+You can register event handler by assigning to `on.event`.
+
+```ts
+const { on } = component("my-component");
+
+on.click = () => {
+  alert("clicked");
+};
+```
+
 ## `component().on(selector)[eventName] = EventHandler`
 
-## `component().is(name: string): void`
+You can register event handler by assigning to `on(selector).event`.
 
-## `component().innerHTML(html: string): void`
+The actual event handler is attached to the component dom (the root of element which this component mounts), but the handler is only triggered when the target is inside the given `selector`.
 
-## `component().sub(name: string): void`
+```ts
+const { on } = component("my-component");
+
+on(".btn").click = () => {
+  alert(".btn is clicked");
+};
+```
+
+## `component().is(name: string)`
+
+`is(name)` sets the html class to the component dom at `mount` phase.
+
+```ts
+const { is } = component("my-component");
+
+is("my-class-name");
+```
+
+## `component().innerHTML(html: string)`
+
+`innerHTML(html)` sets the inner html to the component dom at `mount` phase.
+
+```ts
+const { innerHTML } = component("my-component");
+
+innerHTML("<h1>Greetings!</h1><p>Hello from my-component</p>");
+```
+
+## `component().sub(type: string)`
+
+`sub(type)` sets the html class of the form `sub:type` to the component at `mount` phase. By adding `sub:type` class, the component can receive the event from `pub(type)` calls.
+
+```ts
+{
+  const { sub, on } = component("my-component");
+  sub("my-event");
+  on["my-event"] = () => {
+    alert("Got my-event");
+  };
+}
+{
+  const { on } = component("another-component");
+  on.click = ({ pub }) => {
+    pub("my-event");
+  };
+}
+```
 
 ## `EventHandler`
 
@@ -313,13 +376,13 @@ The event handler in `capsule` has the following signature. The first argument
 is `EventHandlerContext`, not `Event`.
 
 ```ts
-type EventHandler = (ctx: EventHandlerContext) => void;
+type EventHandler = (ctx: ComponentEventContext) => void;
 ```
 
-## `EventHandlerContext`
+## `ComponentEventContext`
 
 ```ts
-interface EventHandlerContext {
+interface ComponentEventContext {
   e: Event;
   el: Element;
   emit<T = unknown>(name: string, data: T): void;
@@ -344,10 +407,22 @@ You can optionally attach data to the event. The attached data is available via
 `.detail` property of `CustomEvent` object.
 
 `pub(type)` dispatches the event to the remote elements which have `sub:type`
-class. For example:
+class. This should be used with `sub(type)` calls. For example:
 
-```
-pub("my-event")
+```ts
+{
+  const { sub, on } = component("my-component");
+  sub("my-event");
+  on["my-event"] = () => {
+    alert("Got my-event");
+  };
+}
+{
+  const { on } = component("another-component");
+  on.click = ({ pub }) => {
+    pub("my-event");
+  };
+}
 ```
 
 This call dispatches `new CustomEvent("my-type")` to the elements which have

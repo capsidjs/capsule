@@ -10,9 +10,9 @@ interface RegistryType {
   [key: string]: Initializer;
 }
 interface EventRegistry {
-  [key: string]: Hook;
+  [key: string]: EventHandler;
   (selector: string): {
-    [key: string]: Hook;
+    [key: string]: EventHandler;
   };
 }
 interface ComponentResult {
@@ -38,7 +38,7 @@ interface ComponentEventContext {
   emit<T = unknown>(name: string, data: T): void;
 }
 
-type Hook = (el: ComponentEventContext) => void;
+type EventHandler = (el: ComponentEventContext) => void;
 
 /** The registry of component initializers. */
 const registry: RegistryType = {};
@@ -73,14 +73,14 @@ export function component(name: string): ComponentResult {
   const initClass = `${name}-💊`;
 
   // Hooks for mount phase
-  const hooks: Hook[] = [({ el }) => {
+  const hooks: EventHandler[] = [({ el }) => {
     // FIXME(kt3k): the below can be written as .add(name, initClass)
     // when deno_dom fixes add class.
     el.classList.add(name);
     el.classList.add(initClass);
   }];
   // Hooks for unmount phase
-  const unmountHooks: Hook[] = [];
+  const unmountHooks: EventHandler[] = [];
 
   /** Initializes the html element by the given configuration. */
   const initializer = (el: Element) => {
@@ -185,8 +185,8 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
 
 function addEventBindHook(
   name: string,
-  hooks: Hook[],
-  unmountHooks: Hook[],
+  hooks: EventHandler[],
+  unmountHooks: EventHandler[],
   type: string,
   handler: (ctx: ComponentEventContext) => void,
   selector?: string,
