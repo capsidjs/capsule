@@ -1,26 +1,81 @@
 // Copyright 2022 Yoshiya Hinosawa. All rights reserved. MIT license.
 
-export {
+import {
   assert,
   assertEquals,
   assertThrows,
 } from "https://deno.land/std@0.119.0/testing/asserts.ts";
 import { deferred } from "https://deno.land/std@0.119.0/async/deferred.ts";
 import "./dom_polyfill_deno.ts";
-import { component } from "./mod.ts";
+import { component, prep } from "./mod.ts";
 
-const randomName = () => "c-" + Math.random().toString().slice(2);
+(globalThis as any).__DEV__ = false;
 
-Deno.test("component.on.__mount__ is called when component is mounted", async () => {
-  const p = deferred();
+Deno.test("on.__mount__ is called when component is mounted", () => {
   const name = randomName();
   const { on } = component(name);
 
   document.body.innerHTML = `<div class="${name}"></div>`;
 
+  let called = false;
+
   on.__mount__ = () => {
-    p.resolve();
+    called = true;
   };
 
-  await p;
+  prep();
+
+  assert(called);
 });
+
+Deno.test("on[event] is called when the event is dispatched", () => {
+  const name = randomName();
+  const { on } = component(name);
+
+  document.body.innerHTML = `<div class="${name}"></div>`;
+
+  let called = false;
+
+  on.click = () => {
+    called = true;
+  };
+
+  prep();
+
+  qs("div")?.dispatchEvent(new Event("click"));
+  assert(called);
+});
+
+Deno.test("on(selector)[event] is called when the event is dispatched only under the selector", async () => {
+  const name = randomName();
+  const { on } = component(name);
+
+  document.body.innerHTML =
+    `<div class="${name}"><button class="btn1"></button><button class="btn2"></button></div>`;
+
+  let onBtn1ClickCalled = false;
+  let onBtn2ClickCalled = false;
+
+  on(".btn1").click = () => {
+    onBtn1ClickCalled = true;
+  };
+
+  on(".btn2").click = () => {
+    onBtn2ClickCalled = true;
+  };
+
+  prep();
+
+  const btn = qs(".btn1");
+  // FIXME(kt3k): workaround for deno_dom & deno issue
+  // deno_dom doesn't bubble event when the direct target dom doesn't have event handler
+  btn?.addEventListener("click", () => {});
+  btn?.dispatchEvent(new Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 100));
+
+  assert(onBtn1ClickCalled);
+  assert(!onBtn2ClickCalled);
+});
+
+const randomName = () => "c-" + Math.random().toString(36).slice(2);
+const qs = (s: string) => document.querySelector(s);

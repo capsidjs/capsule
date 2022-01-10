@@ -32,12 +32,15 @@ const boldColor = (color: string): string =>
 
 const defaultEventColor = "#f012be";
 
+declare const __DEV__: boolean;
+
 export function logEvent({
   component,
   e,
   module,
   color,
 }: LogEventMessage) {
+  if (typeof __DEV__ === "boolean" && !__DEV__) return;
   const event = e.type;
 
   console.groupCollapsed(

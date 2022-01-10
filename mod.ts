@@ -9,11 +9,14 @@ interface Initializer {
 interface RegistryType {
   [key: string]: Initializer;
 }
-
+interface EventRegistry {
+  [key: string]: Hook;
+  (selector: string): {
+    [key: string]: Hook;
+  };
+}
 interface ComponentResult {
-  // TODO(kt3k): type this
-  // deno-lint-ignore no-explicit-any
-  on: any;
+  on: EventRegistry;
   is(name: string): void;
   sub(type: string): void;
   innerHTML(html: string): void;
@@ -25,7 +28,9 @@ interface ComponentEventContext {
   /** The element */
   el: Element;
   /** Queries elements by the given selector under the component dom */
-  query(selector: string): Element | null;
+  query<T extends Element = Element>(selector: string): T | null;
+  /** Queries all elements by the given selector under the component dom */
+  queryAll<T extends Element = Element>(selector: string): NodeListOf<T>;
   /** Publishes the event. Events are delivered to elements which have `sub:event` class.
    * The dispatched events don't bubbles up */
   pub<T = unknown>(name: string, data: T): void;
@@ -102,10 +107,31 @@ export function component(name: string): ComponentResult {
     prep(name);
   });
 
-  const on = new Proxy({}, {
+  // deno-lint-ignore no-explicit-any
+  const on: any = new Proxy(() => {}, {
     set(_: unknown, type: string, value: unknown): boolean {
       // deno-lint-ignore no-explicit-any
       return addEventBindHook(name, hooks, unmountHooks, type, value as any);
+    },
+    apply(_target, _thisArg, args) {
+      const selector = args[0];
+      assert(
+        typeof selector === "string",
+        "Delegation selector must be a string. ${typeof selector} is given.",
+      );
+      return new Proxy({}, {
+        set(_: unknown, type: string, value: unknown): boolean {
+          return addEventBindHook(
+            name,
+            hooks,
+            unmountHooks,
+            type,
+            // deno-lint-ignore no-explicit-any
+            value as any,
+            selector,
+          );
+        },
+      });
     },
     // deno-lint-ignore no-explicit-any
     get(_: unknown, type: string): any {
@@ -145,6 +171,7 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
     e,
     el,
     query: (s: string) => el.querySelector(s),
+    queryAll: (s: string) => el.querySelectorAll(s),
     pub: (type: string, v: unknown) => {
       document.querySelectorAll(`.sub\\:${type}`).forEach((el) => {
         el.dispatchEvent(new CustomEvent(type, { bubbles: false, detail: v }));

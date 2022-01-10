@@ -7,7 +7,8 @@
 # Features
 
 - Supports **event-driven** style of frontend programming in a **new way**.
-- **Lightweight** library. **1.1 kb** gzipped. **No dependencies**. **No build** steps.
+- **Lightweight** library. **1.1 kb** gzipped. **No dependencies**. **No build**
+  steps.
 - Uses **plain JavaScript** and **plain HTML**, requires **No special syntax**.
 - **TypeScript** friendly.
 
@@ -233,37 +234,36 @@ on.click = ({ emit }) => {
 };
 ```
 
-Mount hooks. If you register `__mount__` event handler, then it's called when
-the component is mounted.
+Mount hooks.
 
 ```js
 import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
 
 const { on } = component("my-component");
 
-// If `on.__mount__` is set, it's called at mount phase
+// __mount__ handler is called when the component mounts to the elements.
 on.__mount__ = () => {
   console.log("hello, I'm mounted");
 };
 ```
 
-Prevent default, stop propagation. The event object is available at `.e`
-property of handler context.
+Prevent default, stop propagation.
 
 ```js
 import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
 
 const { on } = component("my-component");
 
-// If `on.__mount__` is set, it's called at mount phase
 on.click = ({ e }) => {
+  // e is the native event object.
+  // You can call methods of Event object
   e.stopPropagation();
   e.preventDefault();
   console.log("hello, I'm mounted");
 };
 ```
 
-Event delegate. You can assign handlers to `on.event[selector]` to use
+Event delegation. You can assign handlers to `on(selector).event` to use
 [event delegation](https://www.geeksforgeeks.org/event-delegation-in-javascript/)
 pattern.
 
@@ -272,7 +272,7 @@ import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
 
 const { on } = component("my-component");
 
-on.click[".btn"] = ({ e }) => {
+on(".btn").click = ({ e }) => {
   console.log(".btn is clicked!");
 };
 ```
@@ -299,7 +299,7 @@ interface ComponentResult {
 
 ## `component().on[eventName] = EventHandler`
 
-## `component().on[eventName][selector] = EventHandler`
+## `component().on(selector)[eventName] = EventHandler`
 
 ## `component().is(name: string): void`
 
@@ -325,6 +325,7 @@ interface EventHandlerContext {
   emit<T = unknown>(name: string, data: T): void;
   pub<T = unknown>(name: string, data: T): void;
   query(selector: string): Element | null;
+  queryAll(selector: string): NodeListOf<Element> | null;
 }
 ```
 
