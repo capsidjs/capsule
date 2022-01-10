@@ -9,6 +9,7 @@ import { deferred } from "https://deno.land/std@0.119.0/async/deferred.ts";
 import "./dom_polyfill_deno.ts";
 import { component, prep } from "./mod.ts";
 
+// deno-lint-ignore no-explicit-any
 (globalThis as any).__DEV__ = false;
 
 Deno.test("on.__mount__ is called when component is mounted", () => {

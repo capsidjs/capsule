@@ -320,7 +320,9 @@ on.click = () => {
 
 You can register event handler by assigning to `on(selector).event`.
 
-The actual event handler is attached to the component dom (the root of element which this component mounts), but the handler is only triggered when the target is inside the given `selector`.
+The actual event handler is attached to the component dom (the root of element
+which this component mounts), but the handler is only triggered when the target
+is inside the given `selector`.
 
 ```ts
 const { on } = component("my-component");
@@ -352,7 +354,9 @@ innerHTML("<h1>Greetings!</h1><p>Hello from my-component</p>");
 
 ## `component().sub(type: string)`
 
-`sub(type)` sets the html class of the form `sub:type` to the component at `mount` phase. By adding `sub:type` class, the component can receive the event from `pub(type)` calls.
+`sub(type)` sets the html class of the form `sub:type` to the component at
+`mount` phase. By adding `sub:type` class, the component can receive the event
+from `pub(type)` calls.
 
 ```ts
 {
