@@ -8,11 +8,15 @@ test:
 
 .PHONY: cov
 cov:
-	deno test --config deno.json --coverage=cov -A --unstable --no-check
+	deno test --config deno.json --coverage=cov -A --unstable --no-check --ignore=node
 
 .PHONY: lcov
 lcov:
-	deno coverage --lcov cov
+	deno coverage --lcov cov > lcov.info
+
+.PHONY: html_cov
+html_cov:
+	genhtml -o html_cov lcov.info
 
 .PHONY: fmt
 fmt:

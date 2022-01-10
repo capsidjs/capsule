@@ -1,3 +1,5 @@
 /cov
+/html_cov
+/lcov.info
 /.vscode
 /node
