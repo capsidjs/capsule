@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" width="70" alt="capsule" />
 
-# Capsule v0.3.0
+# Capsule v0.4.0
 
 > Event-driven DOM programming in a new style
 
@@ -159,7 +159,7 @@ import { component } from "https://deno.land/x/capsule/dist.js";
 Deno:
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 ```
 
 Via npm:
@@ -179,7 +179,7 @@ import { component } from "@kt3k/capsule";
 Mirrors input value of `<input>` element to another dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 
 const { on } = component("mirroring");
 
@@ -191,7 +191,7 @@ on.input = ({ query }) => {
 Pubsub.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 
 const EVENT = "my-event";
 
@@ -217,7 +217,7 @@ const EVENT = "my-event";
 Bubbling events.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -238,7 +238,7 @@ on.click = ({ emit }) => {
 Mount hooks.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -251,7 +251,7 @@ on.__mount__ = () => {
 Prevent default, stop propagation.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -269,7 +269,7 @@ Event delegation. You can assign handlers to `on(selector).event` to use
 pattern.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -282,7 +282,7 @@ Outside event handler. By assigning `on.outside.event`, you can handle the event
 outside of the component dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -294,7 +294,7 @@ on.outside.click = ({ e }) => {
 # API reference
 
 ```ts
-const { component, mount } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+const { component, mount } from "https://deno.land/x/capsule@v0.4.0/mod.ts";
 ```
 
 ## `component(name): ComponentResult`
@@ -523,6 +523,7 @@ unmount("my-component", el);
 
 # History
 
+- 2022-01-11 v0.4.0 Add outside handlers.
 - 2022-01-11 v0.3.0 Add `unmount`.
 - 2022-01-11 v0.2.0 Change delegation syntax.
 
