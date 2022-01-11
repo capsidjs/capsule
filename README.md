@@ -150,12 +150,24 @@ registration to the event. When `pub(EVENT)` is called the CustomEvent of
 
 # Install
 
-Vanilla js:
+Vanilla js (ES Module):
 
 ```html
 <script type="module">
 import { component } from "https://deno.land/x/capsule@v0.4.0/dist.min.js";
-// ... your code
+// ... your code ...
+</script>
+```
+
+Vanilla js (Legacy script tag):
+
+```html
+<script src="https://deno.land/x/capsule@v0.4.0/loader.js"></script>
+<script>
+capsuleLoader.then((capsule) => {
+  const { component } = capsule;
+  // ... your code ...
+});
 </script>
 ```
 
@@ -496,7 +508,7 @@ mount(undefined, myDom);
 mount("my-component", myDom);
 ```
 
-## unmount(name: string, el: Element)`
+## `unmount(name: string, el: Element)`
 
 This function unmounts the component of the given name from the element. This
 removes the all event listeners of the component and also calls the
