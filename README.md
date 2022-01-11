@@ -158,7 +158,7 @@ import { component } from "https://deno.land/x/capsule/dist.js";
 Deno:
 
 ```js
-import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
 ```
 
 Via npm:
@@ -237,7 +237,7 @@ on.click = ({ emit }) => {
 Mount hooks.
 
 ```js
-import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -250,7 +250,7 @@ on.__mount__ = () => {
 Prevent default, stop propagation.
 
 ```js
-import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -268,7 +268,7 @@ Event delegation. You can assign handlers to `on(selector).event` to use
 pattern.
 
 ```js
-import { component } from "https://deno.land/x/capsule@0.1.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
 
 const { on } = component("my-component");
 
