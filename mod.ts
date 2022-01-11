@@ -37,9 +37,9 @@ interface ComponentEventContext {
   queryAll<T extends Element = Element>(selector: string): NodeListOf<T>;
   /** Publishes the event. Events are delivered to elements which have `sub:event` class.
    * The dispatched events don't bubbles up */
-  pub<T = unknown>(name: string, data: T): void;
+  pub<T = unknown>(name: string, data?: T): void;
   /** Emits the event. The event bubbles up from the component dom */
-  emit<T = unknown>(name: string, data: T): void;
+  emit<T = unknown>(name: string, data?: T): void;
 }
 
 type EventHandler = (el: ComponentEventContext) => void;
@@ -72,6 +72,10 @@ export function component(name: string): ComponentResult {
   assert(
     typeof name === "string" && !!name,
     "Component name must be a non-empty string",
+  );
+  assert(
+    !registry[name],
+    `The component of the given name is already registered: ${name}`,
   );
 
   const initClass = `${name}-💊`;
@@ -192,13 +196,15 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
     el,
     query: (s: string) => el.querySelector(s),
     queryAll: (s: string) => el.querySelectorAll(s),
-    pub: (type: string, v: unknown) => {
+    pub: (type: string, data?: unknown) => {
       document.querySelectorAll(`.sub\\:${type}`).forEach((el) => {
-        el.dispatchEvent(new CustomEvent(type, { bubbles: false, detail: v }));
+        el.dispatchEvent(
+          new CustomEvent(type, { bubbles: false, detail: data }),
+        );
       });
     },
-    emit: (type: string, v: unknown) => {
-      el.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: v }));
+    emit: (type: string, data?: unknown) => {
+      el.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: data }));
     },
   };
 }
@@ -272,5 +278,9 @@ export function mount(name?: string | null, el?: Element) {
 }
 
 export function unmount(name: string, el: Element) {
+  assert(
+    !!registry[name],
+    `The component of the given name is not registered: ${name}`,
+  );
   el.dispatchEvent(new CustomEvent(`__unmount__:${name}`));
 }

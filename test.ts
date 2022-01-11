@@ -148,6 +148,215 @@ Deno.test("on.outside.event works", () => {
   assertEquals(calledCount, 2);
 });
 
+Deno.test("`is` works", () => {
+  const name = randomName();
+  const { is } = component(name);
+  document.body.innerHTML = `<div class="${name}"></div>`;
+  is("foo");
+  mount();
+  assert(queryByClass(name)?.classList.contains("foo"));
+});
+Deno.test("innerHTML works", () => {
+  const name = randomName();
+  const { innerHTML } = component(name);
+  document.body.innerHTML = `<div class="${name}"></div>`;
+  innerHTML("<p>hello</p>");
+  mount();
+  assertEquals(queryByClass(name)?.innerHTML, "<p>hello</p>");
+});
+Deno.test("pub, sub works", () => {
+  const EVENT = "my-event";
+  const name1 = randomName();
+  const name2 = randomName();
+  let subCalled = false;
+  document.body.innerHTML = `
+    <div class="${name1}"></div>
+    <div class="${name2}"></div>
+  `;
+  {
+    const { on, sub } = component(name1);
+    sub(EVENT);
+    on[EVENT] = () => {
+      subCalled = true;
+    };
+  }
+  {
+    const { on } = component(name2);
+    on.__mount__ = ({ pub }) => {
+      pub(EVENT);
+    };
+  }
+  assert(!subCalled);
+  mount();
+  assert(subCalled);
+});
+Deno.test("emit works", () => {
+  document.body.innerHTML =
+    `<div class="parent"><div class="child"></div></div>`;
+  const EVENT = "my-event";
+  let parentCalled = false;
+  {
+    const { on } = component("parent");
+    on[EVENT] = () => {
+      parentCalled = true;
+    };
+  }
+  {
+    const { on } = component("child");
+    // FIXME(kt3k): workaround for deno_dom & deno issue
+    // deno_dom doesn't bubble event when the direct target dom doesn't have event handler
+    on[EVENT] = () => {};
+    on.__mount__ = ({ emit }) => {
+      emit(EVENT);
+    };
+  }
+  mount();
+  assert(parentCalled);
+});
+Deno.test("query, queryAll works", () => {
+  const name = randomName();
+  document.body.innerHTML = `
+    <div class="${name}">
+      <p>foo</p>
+      <p>bar</p>
+      <p>baz</p>
+    </div>
+  `;
+  const { on } = component(name);
+  on.__mount__ = ({ query, queryAll }) => {
+    assert(query("p") !== null);
+    assertEquals(query("p")?.textContent, "foo");
+
+    assertEquals(queryAll("p")[0].textContent, "foo");
+    assertEquals(queryAll("p")[1].textContent, "bar");
+    assertEquals(queryAll("p")[2].textContent, "baz");
+  };
+});
+Deno.test("assign wrong type to on.event, on.outside.event, on(selector).event", () => {
+  const { on } = component(randomName());
+  assertThrows(() => {
+    on.click = "";
+  });
+  assertThrows(() => {
+    on.click = 1;
+  });
+  assertThrows(() => {
+    on.click = Symbol();
+  });
+  assertThrows(() => {
+    on.click = {};
+  });
+  assertThrows(() => {
+    on.click = [];
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on(".btn").click = "" as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on(".btn").click = 1 as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on(".btn").click = Symbol() as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on(".btn").click = {} as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on(".btn").click = [] as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on.outside.click = "" as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on.outside.click = 1 as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on.outside.click = Symbol() as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on.outside.click = {} as any;
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on.outside.click = [] as any;
+  });
+});
+Deno.test("wrong type selector throws with on(selector).event", () => {
+  const { on } = component(randomName());
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on(1 as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on(1n as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on({} as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on([] as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    on((() => {}) as any);
+  });
+});
+Deno.test("component throws with non string input", () => {
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    component(1 as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    component(1n as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    component(Symbol() as any);
+  });
+  assertThrows(() => {
+    // empty name throws
+    component("");
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    component((() => {}) as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    component({} as any);
+  });
+  assertThrows(() => {
+    // deno-lint-ignore no-explicit-any
+    component([] as any);
+  });
+});
+Deno.test("component throws with already registered name", () => {
+  const name = randomName();
+  component(name);
+  assertThrows(() => {
+    component(name);
+  });
+});
+
+Deno.test("unmount with non registered name throws", () => {
+  assertThrows(() => {
+    unmount(randomName(), document.body);
+  });
+});
+
 // test utils
 const randomName = () => "c-" + Math.random().toString(36).slice(2);
 const query = (s: string) => document.querySelector(s);
