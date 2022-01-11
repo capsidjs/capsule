@@ -4,5 +4,6 @@ files:
   README.md:
     - Capsule v%.%.%
     - 'https://deno.land/x/capsule@v%.%.%/mod.ts'
+    - https://raw.githubusercontent.com/capsidjs/capsule/v%.%.%/dist.min.js
   mod.ts: Capsule v%.%.%
   dnt.ts: 'version: "%.%.%"'
