@@ -509,6 +509,42 @@ on.__unmount__ = () => {
 unmount("my-component", el);
 ```
 
+Note: It's ok to just remove the mounted elements without calling `unmount`. Such removals don't cause a problem in most cases, but if you use `outside` handlers, you need to call unmount to prevent the leakage of the event handler because outside handlers are bound to `document` object.
+
+# How `capsule` works
+
+This section describes how `capsule` works in a big picture.
+
+Let's look at the below basic example.
+
+```js
+const { on } = component("my-component");
+
+on.click = () => {
+  console.log("clicked");
+}
+```
+
+This code is roughly translated into jQuery like the below:
+
+```js
+$(document).read(() => {
+  $(".my-component").each(function () {
+    $this = $(this);
+
+    if (isAlreadyInitialized($this)) {
+      return;
+    }
+
+    $this.click(() => {
+      console.log("clicked");
+    });
+  });
+})
+```
+
+`capsule` can be seen as a syntax sugar for the above pattern (with a few more utilities).
+
 # Prior art
 
 - [capsid](https://github.com/capsidjs/capsid)
