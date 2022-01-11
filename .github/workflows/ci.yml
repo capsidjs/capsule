@@ -1,0 +1,16 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: '1.x'
+      - name: Run fmt check
+        run: make fmt-check
+      - name: Run unit tests
+        run: make test
+      - name: Run dnt
+        run: make dnt
