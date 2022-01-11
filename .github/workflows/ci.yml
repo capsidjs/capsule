@@ -10,6 +10,8 @@ jobs:
           deno-version: '1.x'
       - name: Run fmt check
         run: make fmt-check
+      - name: Run lint
+        run: make lint
       - name: Run unit tests
         run: make test
       - name: Run dnt

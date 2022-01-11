@@ -5,7 +5,6 @@ import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std@0.119.0/testing/asserts.ts";
-import { deferred } from "https://deno.land/std@0.119.0/async/deferred.ts";
 import "./dom_polyfill_deno.ts";
 import { component, mount, unmount } from "./mod.ts";
 
