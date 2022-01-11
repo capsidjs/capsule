@@ -70,6 +70,36 @@ function component(name1) {
         set (_, type, value) {
             return addEventBindHook(name1, hooks, type, value);
         },
+        get (_, outside) {
+            if (outside === "outside") {
+                return new Proxy({}, {
+                    set (_, type, value) {
+                        assert(typeof value === "function", `Event handler must be a function, ${typeof value} (${value}) is given`);
+                        hooks.push(({ el  })=>{
+                            const listener = (e)=>{
+                                if (el !== e.target && !el.contains(e.target)) {
+                                    logEvent({
+                                        module: "outside",
+                                        color: "#39cccc",
+                                        e,
+                                        component: name1
+                                    });
+                                    value(createEventContext(e, el));
+                                }
+                            };
+                            document.addEventListener(type, listener);
+                            el.addEventListener(`__unmount__:${name1}`, ()=>{
+                                document.removeEventListener(type, listener);
+                            }, {
+                                once: true
+                            });
+                        });
+                        return true;
+                    }
+                });
+            }
+            return null;
+        },
         apply (_target, _thisArg, args) {
             const selector = args[0];
             assert(typeof selector === "string", "Delegation selector must be a string. ${typeof selector} is given.");

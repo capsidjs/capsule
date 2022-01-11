@@ -118,6 +118,37 @@ Deno.test("on(selector)[event] is called when the event is dispatched only under
   assert(!onBtn2ClickCalled);
 });
 
+Deno.test("on.outside.event works", () => {
+  const name = randomName();
+  const { on } = component(name);
+
+  document.body.innerHTML =
+    `<div class="root"><div class="${name}"></div><div class="sibling"></div></div>`;
+
+  let calledCount = 0;
+
+  on.outside.click = () => {
+    calledCount++;
+  };
+
+  mount();
+  assertEquals(calledCount, 0);
+
+  const sibling = queryByClass("sibling")!;
+  // FIXME(kt3k): workaround for deno_dom & deno issue
+  // deno_dom doesn't bubble event when the direct target dom doesn't have event handler
+  sibling.addEventListener("click", () => {});
+  sibling.dispatchEvent(new Event("click", { bubbles: true }));
+  assertEquals(calledCount, 1);
+  const root = queryByClass("root")!;
+  // FIXME(kt3k): workaround for deno_dom & deno issue
+  // deno_dom doesn't bubble event when the direct target dom doesn't have event handler
+  root.addEventListener("click", () => {});
+  root.dispatchEvent(new Event("click", { bubbles: true }));
+  assertEquals(calledCount, 2);
+});
+
+// test utils
 const randomName = () => "c-" + Math.random().toString(36).slice(2);
 const query = (s: string) => document.querySelector(s);
 const queryByClass = (name: string) => document.querySelector(`.${name}`);

@@ -10,7 +10,11 @@ interface RegistryType {
   [key: string]: Initializer;
 }
 interface EventRegistry {
-  [key: string]: EventHandler;
+  outside: {
+    [key: string]: EventHandler;
+  };
+  // deno-lint-ignore ban-types
+  [key: string]: EventHandler | {};
   (selector: string): {
     [key: string]: EventHandler;
   };
@@ -113,6 +117,38 @@ export function component(name: string): ComponentResult {
     set(_: unknown, type: string, value: unknown): boolean {
       // deno-lint-ignore no-explicit-any
       return addEventBindHook(name, hooks, type, value as any);
+    },
+    get(_: unknown, outside: string) {
+      if (outside === "outside") {
+        return new Proxy({}, {
+          set(_: unknown, type: string, value: unknown): boolean {
+            assert(
+              typeof value === "function",
+              `Event handler must be a function, ${typeof value} (${value}) is given`,
+            );
+            hooks.push(({ el }) => {
+              const listener = (e: Event) => {
+                // deno-lint-ignore no-explicit-any
+                if (el !== e.target && !el.contains(e.target as any)) {
+                  logEvent({
+                    module: "outside",
+                    color: "#39cccc",
+                    e,
+                    component: name,
+                  });
+                  (value as EventHandler)(createEventContext(e, el));
+                }
+              };
+              document.addEventListener(type, listener);
+              el.addEventListener(`__unmount__:${name}`, () => {
+                document.removeEventListener(type, listener);
+              }, { once: true });
+            });
+            return true;
+          },
+        });
+      }
+      return null;
     },
     apply(_target, _thisArg, args) {
       const selector = args[0];

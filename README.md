@@ -7,7 +7,8 @@
 # Features
 
 - Supports **event-driven** style of frontend programming in a **new way**.
-- **Lightweight** library. **1.1 kb** gzipped. **No dependencies**. **No build**
+- Supports **event delegation** and **outside events** out of the box.
+- **Lightweight** library. **1.2 kb** gzipped. **No dependencies**. **No build**
   steps.
 - Uses **plain JavaScript** and **plain HTML**, requires **No special syntax**.
 - **TypeScript** friendly.
@@ -277,6 +278,19 @@ on(".btn").click = ({ e }) => {
 };
 ```
 
+Outside event handler. By assigning `on.outside.event`, you can handle the event
+outside of the component dom.
+
+```js
+import { component } from "https://deno.land/x/capsule@v0.3.0/mod.ts";
+
+const { on } = component("my-component");
+
+on.outside.click = ({ e }) => {
+  console.log("The outside of my-component has been clicked!");
+};
+```
+
 # API reference
 
 ```ts
@@ -297,8 +311,11 @@ interface ComponentResult {
 }
 
 interface EventRegistry {
-  [key: string]: EventHandler;
+  [key: string]: EventHandler | {};
   (selector: string): {
+    [key: string]: EventHandler;
+  };
+  outside: {
     [key: string]: EventHandler;
   };
 }
@@ -331,6 +348,22 @@ on(".btn").click = () => {
   alert(".btn is clicked");
 };
 ```
+
+## `component().on.outside[eventName] = EventHandler`
+
+You can register event handler for the outside of the component dom by assigning
+to `on.outside.event`
+
+```ts
+const { on } = component("my-component");
+
+on.outside.click = () => {
+  console.log("outside of the component has been clicked!");
+};
+```
+
+This is useful for implementing a tooltip which closes itself if the outside of
+it is clicked.
 
 ## `component().is(name: string)`
 
@@ -467,6 +500,12 @@ removes the all event listeners of the component and also calls the
 `__unmount__` hooks.
 
 ```js
+const { on } = component("my-component");
+
+on.__unmount__ = () => {
+  console.log("unmounting!");
+};
+
 unmount("my-component", el);
 ```
 
