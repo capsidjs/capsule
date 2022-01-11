@@ -78,9 +78,10 @@ export function component(name: string): ComponentResult {
     // when deno_dom fixes add class.
     el.classList.add(name);
     el.classList.add(initClass);
+    el.addEventListener(`__ummount__:${name}`, () => {
+      el.classList.remove(initClass);
+    }, { once: true });
   }];
-  // Hooks for unmount phase
-  const unmountHooks: EventHandler[] = [];
 
   /** Initializes the html element by the given configuration. */
   const initializer = (el: Element) => {
@@ -111,7 +112,7 @@ export function component(name: string): ComponentResult {
   const on: any = new Proxy(() => {}, {
     set(_: unknown, type: string, value: unknown): boolean {
       // deno-lint-ignore no-explicit-any
-      return addEventBindHook(name, hooks, unmountHooks, type, value as any);
+      return addEventBindHook(name, hooks, type, value as any);
     },
     apply(_target, _thisArg, args) {
       const selector = args[0];
@@ -124,23 +125,6 @@ export function component(name: string): ComponentResult {
           return addEventBindHook(
             name,
             hooks,
-            unmountHooks,
-            type,
-            // deno-lint-ignore no-explicit-any
-            value as any,
-            selector,
-          );
-        },
-      });
-    },
-    // deno-lint-ignore no-explicit-any
-    get(_: unknown, type: string): any {
-      return new Proxy({}, {
-        set(_, selector: string, value: unknown): boolean {
-          return addEventBindHook(
-            name,
-            hooks,
-            unmountHooks,
             type,
             // deno-lint-ignore no-explicit-any
             value as any,
@@ -186,7 +170,6 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
 function addEventBindHook(
   name: string,
   hooks: EventHandler[],
-  unmountHooks: EventHandler[],
   type: string,
   handler: (ctx: ComponentEventContext) => void,
   selector?: string,
@@ -200,7 +183,11 @@ function addEventBindHook(
     return true;
   }
   if (type === "__unmount__") {
-    unmountHooks.push(handler);
+    hooks.push(({ el }) => {
+      el.addEventListener(`__unmount__:${name}`, () => {
+        handler(createEventContext(new CustomEvent("__unmount__"), el));
+      }, { once: true });
+    });
     return true;
   }
   hooks.push(({ el }) => {
@@ -221,9 +208,9 @@ function addEventBindHook(
         handler(createEventContext(e, el));
       }
     };
-    unmountHooks.push(() => {
+    el.addEventListener(`__unmount__:${name}`, () => {
       el.removeEventListener(type, listener);
-    });
+    }, { once: true });
     el.addEventListener(type, listener);
   });
   return true;
@@ -246,4 +233,8 @@ export function mount(name?: string | null, el?: Element) {
       registry[className],
     );
   });
+}
+
+export function unmount(name: string, el: Element) {
+  el.dispatchEvent(new CustomEvent(`__unmount__:${name}`));
 }

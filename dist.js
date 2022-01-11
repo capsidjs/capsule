@@ -43,9 +43,13 @@ function component(name1) {
         ({ el  })=>{
             el.classList.add(name1);
             el.classList.add(initClass);
+            el.addEventListener(`__ummount__:${name1}`, ()=>{
+                el.classList.remove(initClass);
+            }, {
+                once: true
+            });
         }
     ];
-    const unmountHooks = [];
     const initializer = (el)=>{
         if (!el.classList.contains(initClass)) {
             const e = new CustomEvent("__mount__", {
@@ -64,21 +68,14 @@ function component(name1) {
     });
     const on = new Proxy(()=>{}, {
         set (_, type, value) {
-            return addEventBindHook(name1, hooks, unmountHooks, type, value);
+            return addEventBindHook(name1, hooks, type, value);
         },
         apply (_target, _thisArg, args) {
             const selector = args[0];
             assert(typeof selector === "string", "Delegation selector must be a string. ${typeof selector} is given.");
             return new Proxy({}, {
                 set (_, type, value) {
-                    return addEventBindHook(name1, hooks, unmountHooks, type, value, selector);
-                }
-            });
-        },
-        get (_, type) {
-            return new Proxy({}, {
-                set (_, selector, value) {
-                    return addEventBindHook(name1, hooks, unmountHooks, type, value, selector);
+                    return addEventBindHook(name1, hooks, type, value, selector);
                 }
             });
         }
@@ -126,14 +123,20 @@ function createEventContext(e, el1) {
         }
     };
 }
-function addEventBindHook(name, hooks, unmountHooks, type, handler, selector) {
+function addEventBindHook(name, hooks, type, handler, selector) {
     assert(typeof handler === "function", `Event handler must be a function, ${typeof handler} (${handler}) is given`);
     if (type === "__mount__") {
         hooks.push(handler);
         return true;
     }
     if (type === "__unmount__") {
-        unmountHooks.push(handler);
+        hooks.push(({ el  })=>{
+            el.addEventListener(`__unmount__:${name}`, ()=>{
+                handler(createEventContext(new CustomEvent("__unmount__"), el));
+            }, {
+                once: true
+            });
+        });
         return true;
     }
     hooks.push(({ el  })=>{
@@ -149,8 +152,10 @@ function addEventBindHook(name, hooks, unmountHooks, type, handler, selector) {
                 handler(createEventContext(e, el));
             }
         };
-        unmountHooks.push(()=>{
+        el.addEventListener(`__unmount__:${name}`, ()=>{
             el.removeEventListener(type, listener);
+        }, {
+            once: true
         });
         el.addEventListener(type, listener);
     });
@@ -170,6 +175,10 @@ function mount(name, el) {
         [].map.call((el || document).querySelectorAll(registry[className].sel), registry[className]);
     });
 }
+function unmount(name, el) {
+    el.dispatchEvent(new CustomEvent(`__unmount__:${name}`));
+}
 export { component as component };
 export { mount as mount };
+export { unmount as unmount };
 

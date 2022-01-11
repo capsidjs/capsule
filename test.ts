@@ -7,12 +7,12 @@ import {
 } from "https://deno.land/std@0.119.0/testing/asserts.ts";
 import { deferred } from "https://deno.land/std@0.119.0/async/deferred.ts";
 import "./dom_polyfill_deno.ts";
-import { component, mount } from "./mod.ts";
+import { component, mount, unmount } from "./mod.ts";
 
 // deno-lint-ignore no-explicit-any
 (globalThis as any).__DEV__ = false;
 
-Deno.test("on.__mount__ is called when component is mounted", () => {
+Deno.test("on.__mount__ is called when the component is mounted", () => {
   const name = randomName();
   const { on } = component(name);
 
@@ -29,6 +29,46 @@ Deno.test("on.__mount__ is called when component is mounted", () => {
   assert(called);
 });
 
+Deno.test("on.__unmount__ is called when the componet is unmounted", () => {
+  const name = randomName();
+  const { on } = component(name);
+
+  document.body.innerHTML = `<div class="${name}"></div>`;
+
+  let called = false;
+
+  on.__unmount__ = () => {
+    called = true;
+  };
+
+  mount();
+  assert(!called);
+  unmount(name, query(`.${name}`)!);
+  assert(called);
+});
+
+Deno.test("unmount removes the event listeners", () => {
+  const name = randomName();
+  const { on } = component(name);
+
+  document.body.innerHTML = `<div class="${name}"></div>`;
+  const el = queryByClass(name);
+
+  let count = 0;
+  on["my-event"] = () => {
+    count++;
+  };
+  mount();
+  assertEquals(count, 0);
+  el?.dispatchEvent(new CustomEvent("my-event"));
+  assertEquals(count, 1);
+  el?.dispatchEvent(new CustomEvent("my-event"));
+  assertEquals(count, 2);
+  unmount(name, el!);
+  el?.dispatchEvent(new CustomEvent("my-event"));
+  assertEquals(count, 2);
+});
+
 Deno.test("on[event] is called when the event is dispatched", () => {
   const name = randomName();
   const { on } = component(name);
@@ -43,7 +83,7 @@ Deno.test("on[event] is called when the event is dispatched", () => {
 
   mount();
 
-  qs("div")?.dispatchEvent(new Event("click"));
+  query("div")?.dispatchEvent(new Event("click"));
   assert(called);
 });
 
@@ -67,7 +107,7 @@ Deno.test("on(selector)[event] is called when the event is dispatched only under
 
   mount();
 
-  const btn = qs(".btn1");
+  const btn = queryByClass("btn1");
   // FIXME(kt3k): workaround for deno_dom & deno issue
   // deno_dom doesn't bubble event when the direct target dom doesn't have event handler
   btn?.addEventListener("click", () => {});
@@ -79,4 +119,5 @@ Deno.test("on(selector)[event] is called when the event is dispatched only under
 });
 
 const randomName = () => "c-" + Math.random().toString(36).slice(2);
-const qs = (s: string) => document.querySelector(s);
+const query = (s: string) => document.querySelector(s);
+const queryByClass = (name: string) => document.querySelector(`.${name}`);

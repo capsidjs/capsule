@@ -436,7 +436,7 @@ bubbles up.
 This method is for communicating with the remote elements which aren't in
 parent-child relationship.
 
-## `mount(name?: string, dom?: Element): void`
+## `mount(name?: string, el?: Element)`
 
 This function initializes the elements with the given configuration. `component`
 call itself initializes the component of the given class name automatically when
@@ -453,11 +453,21 @@ mount("my-compnent");
 
 // Initializes the all components only in `myDom` element.
 // You can use this when you only added something under `myDom`.
-mount(null, myDom);
+mount(undefined, myDom);
 
 // Initializes only "my-component" components only in `myDom` element.
 // You can use this when you only added "my-component" under `myDom`.
 mount("my-component", myDom);
+```
+
+## unmount(name: string, el: Element)`
+
+This function unmounts the component of the given name from the element. This
+removes the all event listeners of the component and also calls the
+`__unmount__` hooks.
+
+```js
+unmount("my-component", el);
 ```
 
 # Prior art
