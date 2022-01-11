@@ -61,3 +61,7 @@ npm-publish:
 	rm -rf node
 	$(MAKE) dnt
 	cd node && npm publish
+
+.PHONY: start
+start:
+	deno run --allow-read=. --allow-net=0.0.0.0:8000 deploy.ts
