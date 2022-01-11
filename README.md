@@ -154,7 +154,7 @@ Vanilla js:
 
 ```html
 <script type="module">
-import { component } from "https://deno.land/x/capsule/dist.js";
+import { component } from "https://deno.land/x/capsule@v0.4.0/dist.min.js";
 // ... your code
 </script>
 ```
