@@ -8,6 +8,7 @@ import {
 import "./dom_polyfill_deno.ts";
 import { component, mount, unmount } from "./mod.ts";
 
+// disable debug logs because it's too verbose for unit testing
 // deno-lint-ignore no-explicit-any
 (globalThis as any).__DEV__ = false;
 
