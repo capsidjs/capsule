@@ -7,7 +7,7 @@ import {
 } from "https://deno.land/std@0.119.0/testing/asserts.ts";
 import { deferred } from "https://deno.land/std@0.119.0/async/deferred.ts";
 import "./dom_polyfill_deno.ts";
-import { component, prep } from "./mod.ts";
+import { component, mount } from "./mod.ts";
 
 // deno-lint-ignore no-explicit-any
 (globalThis as any).__DEV__ = false;
@@ -24,7 +24,7 @@ Deno.test("on.__mount__ is called when component is mounted", () => {
     called = true;
   };
 
-  prep();
+  mount();
 
   assert(called);
 });
@@ -41,7 +41,7 @@ Deno.test("on[event] is called when the event is dispatched", () => {
     called = true;
   };
 
-  prep();
+  mount();
 
   qs("div")?.dispatchEvent(new Event("click"));
   assert(called);
@@ -65,7 +65,7 @@ Deno.test("on(selector)[event] is called when the event is dispatched only under
     onBtn2ClickCalled = true;
   };
 
-  prep();
+  mount();
 
   const btn = qs(".btn1");
   // FIXME(kt3k): workaround for deno_dom & deno issue

@@ -60,7 +60,7 @@ function component(name1) {
     initializer.sel = `.${name1}:not(.${initClass})`;
     registry[name1] = initializer;
     documentReady().then(()=>{
-        prep(name1);
+        mount(name1);
     });
     const on = new Proxy(()=>{}, {
         set (_, type, value) {
@@ -156,7 +156,7 @@ function addEventBindHook(name, hooks, unmountHooks, type, handler, selector) {
     });
     return true;
 }
-function prep(name, el) {
+function mount(name, el) {
     let classNames;
     if (!name) {
         classNames = Object.keys(registry);
@@ -171,5 +171,5 @@ function prep(name, el) {
     });
 }
 export { component as component };
-export { prep as prep };
+export { mount as mount };
 

@@ -280,7 +280,7 @@ on(".btn").click = ({ e }) => {
 # API reference
 
 ```ts
-const { component, prep } from "https://deno.land/x/capsule@v0.2.0/mod.ts";
+const { component, mount } from "https://deno.land/x/capsule@v0.2.0/mod.ts";
 ```
 
 ## `component(name): ComponentResult`
@@ -436,7 +436,7 @@ bubbles up.
 This method is for communicating with the remote elements which aren't in
 parent-child relationship.
 
-## `prep(name?: string, dom?: Element): void`
+## `mount(name?: string, dom?: Element): void`
 
 This function initializes the elements with the given configuration. `component`
 call itself initializes the component of the given class name automatically when
@@ -445,19 +445,19 @@ need to call this method explicitly to initialize capsule's event handlers.
 
 ```js
 // Initializes the all components in the entire page.
-prep();
+mount();
 
 // Initializes only "my-component" components in the entire page.
 // You can use this when you only added "my-component" component.
-prep("my-compnent");
+mount("my-compnent");
 
 // Initializes the all components only in `myDom` element.
 // You can use this when you only added something under `myDom`.
-prep(null, myDom);
+mount(null, myDom);
 
 // Initializes only "my-component" components only in `myDom` element.
 // You can use this when you only added "my-component" under `myDom`.
-prep("my-component", myDom);
+mount("my-component", myDom);
 ```
 
 # Prior art

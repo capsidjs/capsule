@@ -104,7 +104,7 @@ export function component(name: string): ComponentResult {
   registry[name] = initializer;
 
   documentReady().then(() => {
-    prep(name);
+    mount(name);
   });
 
   // deno-lint-ignore no-explicit-any
@@ -229,7 +229,7 @@ function addEventBindHook(
   return true;
 }
 
-export function prep(name?: string | null, el?: Element) {
+export function mount(name?: string | null, el?: Element) {
   let classNames: string[];
 
   if (!name) {
