@@ -1,10 +1,8 @@
-version: 0.1.0
+version: 0.2.0
 commit: 'chore: bump to v%.%.%'
 files:
   README.md:
     - Capsule v%.%.%
-    - https://deno.land/x/capsule@v%.%.%/mod.ts
-  mod.ts:
-    - Capsule v%.%.%
-  dnt.ts:
-    - 'version: "%.%.%"'
+    - 'https://deno.land/x/capsule@v%.%.%/mod.ts'
+  mod.ts: Capsule v%.%.%
+  dnt.ts: 'version: "%.%.%"'

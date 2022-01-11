@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" width="70" alt="capsule" />
 
-# Capsule v0.1.0
+# Capsule v0.2.0
 
 > Event-driven DOM programming in a new style
 
@@ -178,7 +178,7 @@ import { component } from "@kt3k/capsule";
 Mirrors input value of `<input>` element to another dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.2.0/mod.ts";
 
 const { on } = component("mirroring");
 
@@ -190,7 +190,7 @@ on.input = ({ query }) => {
 Pubsub.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.2.0/mod.ts";
 
 const EVENT = "my-event";
 
@@ -216,7 +216,7 @@ const EVENT = "my-event";
 Bubbling events.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.2.0/mod.ts";
 
 const { on } = component("my-component");
 
@@ -280,7 +280,7 @@ on(".btn").click = ({ e }) => {
 # API reference
 
 ```ts
-const { component, prep } from "https://deno.land/x/capsule@v0.1.0/mod.ts";
+const { component, prep } from "https://deno.land/x/capsule@v0.2.0/mod.ts";
 ```
 
 ## `component(name): ComponentResult`
@@ -460,10 +460,6 @@ prep(null, myDom);
 prep("my-component", myDom);
 ```
 
-# License
-
-MIT
-
 # Prior art
 
 - [capsid](https://github.com/capsidjs/capsid)
@@ -475,3 +471,11 @@ MIT
   - Not under active development
 - [eddy.js](https://github.com/WebReflection/eddy)
   - Archived
+
+# History
+
+- 2022-01-11 v0.2.0 Change delegation syntax.
+
+# License
+
+MIT

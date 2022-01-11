@@ -17,7 +17,7 @@ await build({
   test: true,
   package: {
     name: "@kt3k/capsule",
-    version: "0.1.0",
+    version: "0.2.0",
     description: "Event-driven DOM programming in a new style",
     license: "MIT",
     repository: {
