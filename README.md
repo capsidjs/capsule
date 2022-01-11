@@ -10,8 +10,9 @@
 
 - Supports **event-driven** style of frontend programming in a **new way**.
 - Supports **event delegation** and **outside events** out of the box.
-- **Lightweight** library. [**1.2 kb**](https://raw.githubusercontent.com/capsidjs/capsule/v0.4.0/dist.min.js) gzipped. **No dependencies**. **No build**
-  steps.
+- **Lightweight** library.
+  [**1.2 kb**](https://raw.githubusercontent.com/capsidjs/capsule/v0.4.0/dist.min.js)
+  gzipped. **No dependencies**. **No build** steps.
 - Uses **plain JavaScript** and **plain HTML**, requires **No special syntax**.
 - **TypeScript** friendly.
 
