@@ -1,4 +1,5 @@
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg" href="capsule-logo.svg" />
   <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://packup.deno.dev/monaco-editor/min/vs/editor/editor.main.css" />
@@ -6,23 +7,28 @@
   <meta name="description" content="📦 Zero-config web application packager for Deno 🦕">
 </head>
 
-<main class="max-w-screen-lg m-auto">
+<main class="max-w-screen-lg px-2 m-auto">
   <a href="https://github.com/capsidjs/capsule">
     <h1 class="text-2xl font-semibold mt-20 flex items-center gap-2">
       <img class="w-7 h-7" src="capsule-logo.svg" />
       Capsule examples
     </h1>
   </a>
+  <p class="text-gray-700 mt-4">
+    This page shows the examples of
+    <a href="https://github.com/capsidjs/capsule" class="bg-blue-50 text-blue-800 underline font-medium rounded border px-1 py-0.5">capsule</a>
+    frontend library.</p>
   <section class="example mt-10">
     <h2 class="text-lg font-medium">Mirroring example</h2>
+    <p class="text-gray-700 mt-1">The example of mirroring the input value to another dom.</p>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5">const { on } = component("mirroring");
+    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const { on } = component("mirroring");
 
 on.input = ({ query }) => {
   query(".dest").textContent = query(".src").value;
 };</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5"></pre>
+    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
     <template>
 <div class="mirroring">
   <input class="src border" />
@@ -33,18 +39,19 @@ on.input = ({ query }) => {
     <div class="result border rounded-lg p-5 mt-5"></div>
   </section>
 
-  <hr class="my-10" />
+  <hr class="my-10 -mx-2 lg:mx-2" />
 
   <section class="example">
     <h2 class="text-lg font-medium">Mount hook example</h2>
+    <p>When you assign a function to "on.__mount__", it's called when the component is mounted.</p>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5">const { on } = component("hello");
+    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const { on } = component("hello");
 
 on.__mount__ = ({ el }) => {
   el.textContent = `Hello, I'm ${el.textContent}! 👋`;
 };</pre>
     <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5"></pre>
+    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
     <template>
 <div class="hello">John Doe</div>
     </template>
@@ -52,12 +59,16 @@ on.__mount__ = ({ el }) => {
     <div class="result border rounded-lg p-5 mt-5"></div>
   </section>
 
-  <hr class="my-10" />
+  <hr class="my-10 -mx-2 lg:mx-2" />
 
   <section class="example">
     <h2 class="text-lg font-medium">Pubsub example</h2>
+    <p>
+      <a href="https://github.com/capsidjs/capsule" class="bg-blue-50 text-blue-800 underline font-medium rounded border px-1 py-0.5">capsule</a>
+      supports pubsub pattern with "pub" and "sub" methods.
+    </p>
     <h3 class="mt-10">JS</h3>
-    <pre class="js-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5">const EVENT = "my-event";
+    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const EVENT = "my-event";
 
 {
   const { on } = component("pub-element");
@@ -76,15 +87,137 @@ on.__mount__ = ({ el }) => {
     el.textContent += " " + e.detail.hello;
   };
 }</pre>
-    <h3 class="mt-10">HTML</h3>
-    <pre class="html-source rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5"></pre>
     <template>
 <button class="pub-element">publisher (click here)</button>
 <div class="sub-element">subscriber</div>
     </template>
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
     <h3 class="mt-10">Result</h3>
     <div class="result border rounded-lg p-5 mt-5"></div>
   </section>
+
+  <hr class="my-10 -mx-2 lg:mx-2" />
+
+  <section class="example">
+    <h2 class="text-lg font-medium">Event delegation example</h2>
+    <p>
+      Capsule supports
+      <a href="https://www.geeksforgeeks.org/event-delegation-in-javascript/" class="bg-purple-50 text-purple-800 underline font-medium rounded border px-1 py-0.5">Event delegation</a>
+      pattern.
+    </p>
+    <template>
+<div class="delegation-example">
+  <button class="btn border rounded p-2 m-2">btn</button>
+  <p>
+    The event handler is bound to wrapper div (.delegation-example), but the handler is
+    only triggered when the event targeted to '.btn' element.
+  </p>
+  <hr class="my-3" />
+  <div class="result"></div>
+</div>
+    </template>
+    <h3 class="mt-10">JS</h3>
+    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const { on } = component("delegation-example");
+
+on(".btn").click = ({ query }) => {
+  query(".result").textContent += " .btn clicked!";
+};
+    </pre>
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
+    <h3 class="mt-10">Result</h3>
+    <div class="result border rounded-lg p-5 mt-5"></div>
+  </section>
+
+  <hr class="my-10 -mx-2 lg:mx-2" />
+
+  <section class="example">
+    <h2 class="text-lg font-medium">Outside event example</h2>
+    <p>
+      When you're creating floating UI patterns such as tooltips or modal dialogs, you often need to handle the events "outside" of the target dom.
+      Capsule supports this pattern with "on.outside[eventName]".
+    </p>
+    <template>
+      <div class="outside-example">click outside of this area.</div>
+    </template>
+    <h3 class="mt-10">JS</h3>
+    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const { on } = component("outside-example");
+
+on.outside.click = ({ el }) => {
+  el.textContent += " outside clicked!";
+}</pre>
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
+    <h3 class="mt-10">Result</h3>
+    <div class="result border rounded-lg p-5 mt-5"></div>
+  </section>
+
+  <hr class="my-10 -mx-2 lg:mx-2" />
+
+  <section class="example">
+    <h2 class="text-lg font-medium">Emit event example</h2>
+    <p>If you "emit" events, they bubbles up to the parent and ancestors.</p>
+    <template>
+<div class="grandparent border rounded p-2">
+  Grandparent
+  <div class="parent border rounded p-2">
+    Parent
+    <button class="child border rounded">btn</button>
+  </div>
+</div>
+    </template>
+    <h3 class="mt-10">JS</h3>
+    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const EVENT = "my-event";
+{
+  const { on } = component("grandparent");
+  on[EVENT] = ({ el }) => {
+    el.appendChild(new Text(` Got ${EVENT}`));
+  };
+}
+{
+  const { on } = component("parent");
+  on[EVENT] = ({ el }) => {
+    el.appendChild(new Text(` Got ${EVENT}`));
+  };
+}
+{
+  const { on } = component("child");
+
+  on.click = ({ emit }) => {
+    emit(EVENT);
+  };
+}</pre>
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
+    <h3 class="mt-10">Result</h3>
+    <div class="result border rounded-lg p-5 mt-5"></div>
+  </section>
+
+  <hr class="my-10 -mx-2 lg:mx-2" />
+
+  <section class="example">
+    <h2 class="text-lg font-medium">Prevent default example</h2>
+    <p>If you need to preventDefault or stopPropagation, you can access it via '.e' prop.</p>
+    <template>
+<a href="https://google.com" class="prevent-example underline">Link</a>
+    </template>
+    <h3 class="mt-10">JS</h3>
+    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const { on } = component("prevent-example");
+
+on.click = ({ e }) => {
+  e.preventDefault();
+  alert("A link is clicked, but the page doesn't move to the target url because the default behavior is prevented ;)");
+};</pre>
+    <h3 class="mt-10">HTML</h3>
+    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
+    <h3 class="mt-10">Result</h3>
+    <div class="result border rounded-lg p-5 mt-5"></div>
+  </section>
+  <p class="mt-10">
+    More details about capsule library is available in
+    <a class="underline" href="https://github.com/capsidjs/capsule">the github repository</a>.
+  </p>
 </main>
 <footer class="mt-10 py-10 flex items-center justify-center gap-2">
   <img class="w-7 h-7" src="capsule-logo.svg" />
@@ -106,7 +239,11 @@ component("example").on.__mount__ = ({ el, query }) => {
   result.appendChild(query("template").content.cloneNode(true));
   query(".html-source").textContent = result.innerHTML.trim();
   const js = query(".js-source").textContent;
-  eval(js)
+  try {
+    eval(js)
+  } catch {
+    // pass
+  }
   monaco.editor.colorizeElement(query(".html-source"), { mimeType: "text/html", theme: "vs-dark" });
   monaco.editor.colorizeElement(query(".js-source"), { mimeType: "text/javascript", theme: "vs-dark" });
 };

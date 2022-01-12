@@ -16,7 +16,7 @@
 - Uses **plain JavaScript** and **plain HTML**, requires **No special syntax**.
 - **TypeScript** friendly.
 
-[See live examples](https://capsidjs.github.io/capsule/)
+[See live examples](https://capsule.deno.dev/)
 
 # Motivation
 
