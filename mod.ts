@@ -1,4 +1,4 @@
-/*! Capsule v0.4.0 | Copyright 2022 Yoshiya Hinosawa and Capsule contributors | MIT license */
+/*! Capsule v0.5.0 | Copyright 2022 Yoshiya Hinosawa and Capsule contributors | MIT license */
 import { documentReady, logEvent } from "./util.ts";
 
 interface Initializer {

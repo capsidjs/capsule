@@ -1,11 +1,11 @@
-version: 0.4.0
+version: 0.5.0
 commit: 'chore: bump to v%.%.%'
 files:
   README.md:
     - Capsule v%.%.%
     - 'https://deno.land/x/capsule@v%.%.%/mod.ts'
-    - https://raw.githubusercontent.com/capsidjs/capsule/v%.%.%/dist.min.js
-    - https://deno.land/x/capsule@v%.%.%/dist.min.js
-    - https://deno.land/x/capsule@v%.%.%/loader.js
+    - 'https://raw.githubusercontent.com/capsidjs/capsule/v%.%.%/dist.min.js'
+    - 'https://deno.land/x/capsule@v%.%.%/dist.min.js'
+    - 'https://deno.land/x/capsule@v%.%.%/loader.js'
   mod.ts: Capsule v%.%.%
   dnt.ts: 'version: "%.%.%"'
