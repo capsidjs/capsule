@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/capsidjs/capsule/master/capsule-logo.svg" width="70" alt="capsule" />
 
-# Capsule v0.5.0
+# Capsule v0.5.1
 
 [![ci](https://github.com/capsidjs/capsule/actions/workflows/ci.yml/badge.svg)](https://github.com/capsidjs/capsule/actions/workflows/ci.yml)
 
@@ -11,7 +11,7 @@
 - Supports **event-driven** style of frontend programming in a **new way**.
 - Supports **event delegation** and **outside events** out of the box.
 - **Lightweight** library.
-  [**1.2 kb**](https://raw.githubusercontent.com/capsidjs/capsule/v0.5.0/dist.min.js)
+  [**1.2 kb**](https://raw.githubusercontent.com/capsidjs/capsule/v0.5.1/dist.min.js)
   gzipped. **No dependencies**. **No build** steps.
 - Uses **plain JavaScript** and **plain HTML**, requires **No special syntax**.
 - **TypeScript** friendly.
@@ -154,7 +154,7 @@ Vanilla js (ES Module):
 
 ```html
 <script type="module">
-import { component } from "https://deno.land/x/capsule@v0.5.0/dist.min.js";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 // ... your code ...
 </script>
 ```
@@ -162,7 +162,7 @@ import { component } from "https://deno.land/x/capsule@v0.5.0/dist.min.js";
 Vanilla js (Legacy script tag):
 
 ```html
-<script src="https://deno.land/x/capsule@v0.5.0/loader.js"></script>
+<script src="https://deno.land/x/capsule@v0.5.1/loader.js"></script>
 <script>
 capsuleLoader.then((capsule) => {
   const { component } = capsule;
@@ -174,7 +174,7 @@ capsuleLoader.then((capsule) => {
 Deno:
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 ```
 
 Via npm:
@@ -194,7 +194,7 @@ import { component } from "@kt3k/capsule";
 Mirrors input value of `<input>` element to another dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 
 const { on } = component("mirroring");
 
@@ -206,7 +206,7 @@ on.input = ({ query }) => {
 Pubsub.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 
 const EVENT = "my-event";
 
@@ -232,7 +232,7 @@ const EVENT = "my-event";
 Bubbling events.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 
 const { on } = component("my-component");
 
@@ -253,7 +253,7 @@ on.click = ({ emit }) => {
 Mount hooks.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 
 const { on } = component("my-component");
 
@@ -266,7 +266,7 @@ on.__mount__ = () => {
 Prevent default, stop propagation.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 
 const { on } = component("my-component");
 
@@ -284,7 +284,7 @@ Event delegation. You can assign handlers to `on(selector).event` to use
 pattern.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 
 const { on } = component("my-component");
 
@@ -297,7 +297,7 @@ Outside event handler. By assigning `on.outside.event`, you can handle the event
 outside of the component dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 
 const { on } = component("my-component");
 
@@ -309,7 +309,7 @@ on.outside.click = ({ e }) => {
 # API reference
 
 ```ts
-const { component, mount } from "https://deno.land/x/capsule@v0.5.0/mod.ts";
+const { component, mount } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
 ```
 
 ## `component(name): ComponentResult`
@@ -578,6 +578,7 @@ utilities).
 
 # History
 
+- 2022-01-12 v0.5.1 Fix `__mount__` hook execution order
 - 2022-01-12 v0.5.0 Add tests, setup CI.
 - 2022-01-11 v0.4.0 Add outside handlers.
 - 2022-01-11 v0.3.0 Add `unmount`.
