@@ -38,6 +38,7 @@ function assertComponentNameIsValid(name) {
 }
 function component(name1) {
     assert(typeof name1 === "string" && !!name1, "Component name must be a non-empty string");
+    assert(!registry[name1], `The component of the given name is already registered: ${name1}`);
     const initClass = `${name1}-💊`;
     const hooks = [
         ({ el  })=>{
@@ -50,13 +51,17 @@ function component(name1) {
             });
         }
     ];
+    const mountHooks = [];
     const initializer = (el)=>{
         if (!el.classList.contains(initClass)) {
             const e = new CustomEvent("__mount__", {
                 bubbles: false
             });
             const ctx = createEventContext(e, el);
-            hooks.forEach((cb)=>{
+            hooks.map((cb)=>{
+                cb(ctx);
+            });
+            mountHooks.map((cb)=>{
                 cb(ctx);
             });
         }
@@ -68,7 +73,7 @@ function component(name1) {
     });
     const on = new Proxy(()=>{}, {
         set (_, type, value) {
-            return addEventBindHook(name1, hooks, type, value);
+            return addEventBindHook(name1, hooks, mountHooks, type, value);
         },
         get (_, outside) {
             if (outside === "outside") {
@@ -105,7 +110,7 @@ function component(name1) {
             assert(typeof selector === "string", "Delegation selector must be a string. ${typeof selector} is given.");
             return new Proxy({}, {
                 set (_, type, value) {
-                    return addEventBindHook(name1, hooks, type, value, selector);
+                    return addEventBindHook(name1, hooks, mountHooks, type, value, selector);
                 }
             });
         }
@@ -137,26 +142,26 @@ function createEventContext(e, el1) {
         ,
         queryAll: (s)=>el1.querySelectorAll(s)
         ,
-        pub: (type, v)=>{
+        pub: (type, data)=>{
             document.querySelectorAll(`.sub\\:${type}`).forEach((el)=>{
                 el.dispatchEvent(new CustomEvent(type, {
                     bubbles: false,
-                    detail: v
+                    detail: data
                 }));
             });
         },
-        emit: (type, v)=>{
+        emit: (type, data)=>{
             el1.dispatchEvent(new CustomEvent(type, {
                 bubbles: true,
-                detail: v
+                detail: data
             }));
         }
     };
 }
-function addEventBindHook(name, hooks, type, handler, selector) {
+function addEventBindHook(name, hooks, mountHooks, type, handler, selector) {
     assert(typeof handler === "function", `Event handler must be a function, ${typeof handler} (${handler}) is given`);
     if (type === "__mount__") {
-        hooks.push(handler);
+        mountHooks.push(handler);
         return true;
     }
     if (type === "__unmount__") {
@@ -206,6 +211,7 @@ function mount(name, el) {
     });
 }
 function unmount(name, el) {
+    assert(!!registry[name], `The component of the given name is not registered: ${name}`);
     el.dispatchEvent(new CustomEvent(`__unmount__:${name}`));
 }
 export { component as component };

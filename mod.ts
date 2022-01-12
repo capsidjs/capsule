@@ -90,6 +90,7 @@ export function component(name: string): ComponentResult {
       el.classList.remove(initClass);
     }, { once: true });
   }];
+  const mountHooks: EventHandler[] = [];
 
   /** Initializes the html element by the given configuration. */
   const initializer = (el: Element) => {
@@ -100,9 +101,13 @@ export function component(name: string): ComponentResult {
       // This includes:
       // - initialization of event handlers
       // - initialization of innerHTML
-      // - initialization of class names
-      hooks.forEach((cb) => {
+      // - initialization of class names (is, sub)
+      hooks.map((cb) => {
         cb(ctx);
+      });
+      // Execute __mount__ hooks
+      mountHooks.map((cb) => {
+        cb(ctx)
       });
     }
   };
@@ -120,7 +125,7 @@ export function component(name: string): ComponentResult {
   const on: any = new Proxy(() => {}, {
     set(_: unknown, type: string, value: unknown): boolean {
       // deno-lint-ignore no-explicit-any
-      return addEventBindHook(name, hooks, type, value as any);
+      return addEventBindHook(name, hooks, mountHooks, type, value as any);
     },
     get(_: unknown, outside: string) {
       if (outside === "outside") {
@@ -165,6 +170,7 @@ export function component(name: string): ComponentResult {
           return addEventBindHook(
             name,
             hooks,
+            mountHooks,
             type,
             // deno-lint-ignore no-explicit-any
             value as any,
@@ -212,6 +218,7 @@ function createEventContext(e: Event, el: Element): ComponentEventContext {
 function addEventBindHook(
   name: string,
   hooks: EventHandler[],
+  mountHooks: EventHandler[],
   type: string,
   handler: (ctx: ComponentEventContext) => void,
   selector?: string,
@@ -221,7 +228,7 @@ function addEventBindHook(
     `Event handler must be a function, ${typeof handler} (${handler}) is given`,
   );
   if (type === "__mount__") {
-    hooks.push(handler);
+    mountHooks.push(handler);
     return true;
   }
   if (type === "__unmount__") {

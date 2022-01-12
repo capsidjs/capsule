@@ -29,6 +29,39 @@ Deno.test("on.__mount__ is called when the component is mounted", () => {
   assert(called);
 });
 
+Deno.test("on.__mount__ is called after other initialization is finished", () => {
+  const name = randomName();
+  const { on, is, sub, innerHTML } = component(name);
+
+  document.body.innerHTML = `<div class="${name}"></div>`;
+
+  let myEventTriggered = false;
+  let hasFoo = false;
+  let hasSubBar = false;
+  let hasInnerHTML = false;
+
+  on.__mount__ = ({ el, emit }) => {
+    emit("my-event");
+    hasFoo = el.classList.contains("foo");
+    hasSubBar = el.classList.contains("sub:bar")
+    hasInnerHTML = el.innerHTML === "<p>hello</p>";
+  };
+
+  on["my-event"] = () => {
+    myEventTriggered = true;
+  }
+  is("foo");
+  sub("bar");
+  innerHTML("<p>hello</p>");
+
+  mount();
+
+  assert(myEventTriggered);
+  assert(hasFoo);
+  assert(hasSubBar);
+  assert(hasInnerHTML);
+});
+
 Deno.test("on.__unmount__ is called when the componet is unmounted", () => {
   const name = randomName();
   const { on } = component(name);
