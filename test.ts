@@ -392,5 +392,6 @@ Deno.test("unmount with non registered name throws", () => {
 
 // test utils
 const randomName = () => "c-" + Math.random().toString(36).slice(2);
-const query = (s: string) => document.querySelector(s);
-const queryByClass = (name: string) => document.querySelector(`.${name}`);
+const query = (s: string) => document.querySelector<HTMLElement>(s);
+const queryByClass = (name: string) =>
+  document.querySelector<HTMLElement>(`.${name}`);
