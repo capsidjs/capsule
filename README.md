@@ -148,6 +148,14 @@ Note: `capsule` uses DOM Event as event payload, and `sub:EVENT` HTML class as
 registration to the event. When `pub(EVENT)` is called the CustomEvent of
 `EVENT` type are dispatched to the elements which have `sub:EVENT` class.
 
+## TodoMVC
+
+TodoMVC implementation is also available [here](https://github.com/capsidjs/capsule-todomvc).
+
+## Live examples
+
+See [the live demos](https://capsule.deno.dev/).
+
 # Install
 
 Vanilla js (ES Module):
