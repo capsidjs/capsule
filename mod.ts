@@ -107,7 +107,7 @@ export function component(name: string): ComponentResult {
       });
       // Execute __mount__ hooks
       mountHooks.map((cb) => {
-        cb(ctx)
+        cb(ctx);
       });
     }
   };

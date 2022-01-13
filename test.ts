@@ -43,13 +43,13 @@ Deno.test("on.__mount__ is called after other initialization is finished", () =>
   on.__mount__ = ({ el, emit }) => {
     emit("my-event");
     hasFoo = el.classList.contains("foo");
-    hasSubBar = el.classList.contains("sub:bar")
+    hasSubBar = el.classList.contains("sub:bar");
     hasInnerHTML = el.innerHTML === "<p>hello</p>";
   };
 
   on["my-event"] = () => {
     myEventTriggered = true;
-  }
+  };
   is("foo");
   sub("bar");
   innerHTML("<p>hello</p>");
