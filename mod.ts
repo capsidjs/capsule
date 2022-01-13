@@ -2,7 +2,7 @@
 import { documentReady, logEvent } from "./util.ts";
 
 interface Initializer {
-  (el: Element): void;
+  (el: HTMLElement): void;
   /** The elector for the component */
   sel: string;
 }
@@ -30,11 +30,13 @@ interface ComponentEventContext {
   /** The event */
   e: Event;
   /** The element */
-  el: Element;
+  el: HTMLElement;
   /** Queries elements by the given selector under the component dom */
-  query<T extends Element = Element>(selector: string): T | null;
+  query<T extends HTMLElement = HTMLElement>(selector: string): T | null;
   /** Queries all elements by the given selector under the component dom */
-  queryAll<T extends Element = Element>(selector: string): NodeListOf<T>;
+  queryAll<T extends HTMLElement = HTMLElement>(
+    selector: string,
+  ): NodeListOf<T>;
   /** Publishes the event. Events are delivered to elements which have `sub:event` class.
    * The dispatched events don't bubbles up */
   pub<T = unknown>(name: string, data?: T): void;
@@ -93,7 +95,7 @@ export function component(name: string): ComponentResult {
   const mountHooks: EventHandler[] = [];
 
   /** Initializes the html element by the given configuration. */
-  const initializer = (el: Element) => {
+  const initializer = (el: HTMLElement) => {
     if (!el.classList.contains(initClass)) {
       const e = new CustomEvent("__mount__", { bubbles: false });
       const ctx = createEventContext(e, el);
@@ -196,7 +198,7 @@ export function component(name: string): ComponentResult {
   return { on, is, sub, innerHTML };
 }
 
-function createEventContext(e: Event, el: Element): ComponentEventContext {
+function createEventContext(e: Event, el: HTMLElement): ComponentEventContext {
   return {
     e,
     el,
@@ -265,7 +267,7 @@ function addEventBindHook(
   return true;
 }
 
-export function mount(name?: string | null, el?: Element) {
+export function mount(name?: string | null, el?: HTMLElement) {
   let classNames: string[];
 
   if (!name) {
@@ -284,7 +286,7 @@ export function mount(name?: string | null, el?: Element) {
   });
 }
 
-export function unmount(name: string, el: Element) {
+export function unmount(name: string, el: HTMLElement) {
   assert(
     !!registry[name],
     `The component of the given name is not registered: ${name}`,

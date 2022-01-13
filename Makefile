@@ -4,7 +4,7 @@ TWD=deno run -A --allow-read=. --allow-write=style.css --allow-net=deno.land,esm
 
 .PHONY: test
 test:
-	deno test --config deno.json -A --unstable --no-check --ignore=node
+	deno test --config deno.json -A --unstable --ignore=node
 
 .PHONY: cov
 cov:
