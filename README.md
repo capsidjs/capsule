@@ -194,7 +194,7 @@ import { component } from "@kt3k/capsule";
 Mirrors input value of `<input>` element to another dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 
 const { on } = component("mirroring");
 
@@ -206,7 +206,7 @@ on.input = ({ query }) => {
 Pubsub.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 
 const EVENT = "my-event";
 
@@ -232,7 +232,7 @@ const EVENT = "my-event";
 Bubbling events.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 
 const { on } = component("my-component");
 
@@ -253,7 +253,7 @@ on.click = ({ emit }) => {
 Mount hooks.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 
 const { on } = component("my-component");
 
@@ -266,7 +266,7 @@ on.__mount__ = () => {
 Prevent default, stop propagation.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 
 const { on } = component("my-component");
 
@@ -284,7 +284,7 @@ Event delegation. You can assign handlers to `on(selector).event` to use
 pattern.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 
 const { on } = component("my-component");
 
@@ -297,7 +297,7 @@ Outside event handler. By assigning `on.outside.event`, you can handle the event
 outside of the component dom.
 
 ```js
-import { component } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+import { component } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 
 const { on } = component("my-component");
 
@@ -309,7 +309,7 @@ on.outside.click = ({ e }) => {
 # API reference
 
 ```ts
-const { component, mount } from "https://deno.land/x/capsule@v0.5.1/mod.ts";
+const { component, mount } from "https://deno.land/x/capsule@v0.5.1/dist.min.js";
 ```
 
 ## `component(name): ComponentResult`
