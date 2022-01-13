@@ -150,7 +150,8 @@ registration to the event. When `pub(EVENT)` is called the CustomEvent of
 
 ## TodoMVC
 
-TodoMVC implementation is also available [here](https://github.com/capsidjs/capsule-todomvc).
+TodoMVC implementation is also available
+[here](https://github.com/capsidjs/capsule-todomvc).
 
 ## Live examples
 
