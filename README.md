@@ -567,7 +567,7 @@ utilities).
 # Prior art
 
 - [capsid](https://github.com/capsidjs/capsid)
-  - This library is heavily inspired by capsid.
+  - `capsule` is heavily inspired by `capsid`
 
 # Projects with similar concepts
 
