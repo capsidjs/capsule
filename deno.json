@@ -24,6 +24,6 @@
     "twd": "deno run -A --allow-read=. --allow-write=style.css --allow-net=deno.land,esm.sh,cdn.esm.sh https://deno.land/x/twd@v0.4.8/cli.ts -o style.css index.html",
     "twd-w": "deno task twd -- -w",
     "npm-publish": "rm -rf node && deno task dnt && cd node && npm publish",
-    "start": "deno run --allow-read=. --allow-net=0.0.0.0:8000 deploy.ts"
+    "start": "deno run --allow-read=. --allow-net=0.0.0.0:8000 --config empty.json deploy.ts"
   }
 }

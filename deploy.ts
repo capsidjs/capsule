@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.120.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.135.0/http/server.ts";
 import { lookup } from "https://deno.land/x/media_types/mod.ts";
 
 console.log("Visit http://localhost:8000/");
