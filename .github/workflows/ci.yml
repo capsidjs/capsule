@@ -6,13 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@v1
-        with:
-          deno-version: '1.x'
-      - name: Run fmt check
-        run: make fmt-check
-      - name: Run lint
-        run: make lint
-      - name: Run unit tests
-        run: make test
-      - name: Run dnt
-        run: make dnt
+      - run: deno fmt --check
+      - run: deno lint
+      - run: deno task test
+      - run: deno task dnt
