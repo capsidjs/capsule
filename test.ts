@@ -35,7 +35,6 @@ Deno.test("on.__mount__ is called after other initialization is finished", () =>
 
   document.body.innerHTML = `<div class="${name}"></div>`;
 
-  let myEventTriggered = false;
   let hasFoo = false;
   let hasSubBar = false;
   let hasInnerHTML = false;
