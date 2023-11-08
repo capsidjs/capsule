@@ -40,23 +40,18 @@ Deno.test("on.__mount__ is called after other initialization is finished", () =>
   let hasSubBar = false;
   let hasInnerHTML = false;
 
-  on.__mount__ = ({ el, emit }) => {
-    emit("my-event");
+  on.__mount__ = ({ el }) => {
     hasFoo = el.classList.contains("foo");
     hasSubBar = el.classList.contains("sub:bar");
     hasInnerHTML = el.innerHTML === "<p>hello</p>";
   };
 
-  on["my-event"] = () => {
-    myEventTriggered = true;
-  };
   is("foo");
   sub("bar");
   innerHTML("<p>hello</p>");
 
   mount();
 
-  assert(myEventTriggered);
   assert(hasFoo);
   assert(hasSubBar);
   assert(hasInnerHTML);
@@ -223,29 +218,7 @@ Deno.test("pub, sub works", () => {
   mount();
   assert(subCalled);
 });
-Deno.test("emit works", () => {
-  document.body.innerHTML =
-    `<div class="parent"><div class="child"></div></div>`;
-  const EVENT = "my-event";
-  let parentCalled = false;
-  {
-    const { on } = component("parent");
-    on[EVENT] = () => {
-      parentCalled = true;
-    };
-  }
-  {
-    const { on } = component("child");
-    // FIXME(kt3k): workaround for deno_dom & deno issue
-    // deno_dom doesn't bubble event when the direct target dom doesn't have event handler
-    on[EVENT] = () => {};
-    on.__mount__ = ({ emit }) => {
-      emit(EVENT);
-    };
-  }
-  mount();
-  assert(parentCalled);
-});
+
 Deno.test("query, queryAll works", () => {
   const name = randomName();
   document.body.innerHTML = `
