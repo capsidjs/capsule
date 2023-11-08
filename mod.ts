@@ -40,8 +40,6 @@ interface ComponentEventContext {
   /** Publishes the event. Events are delivered to elements which have `sub:event` class.
    * The dispatched events don't bubbles up */
   pub<T = unknown>(name: string, data?: T): void;
-  /** Emits the event. The event bubbles up from the component dom */
-  emit<T = unknown>(name: string, data?: T): void;
 }
 
 type EventHandler = (el: ComponentEventContext) => void;
@@ -210,9 +208,6 @@ function createEventContext(e: Event, el: HTMLElement): ComponentEventContext {
           new CustomEvent(type, { bubbles: false, detail: data }),
         );
       });
-    },
-    emit: (type: string, data?: unknown) => {
-      el.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: data }));
     },
   };
 }

@@ -17,13 +17,12 @@ function documentReady() {
         checkReady();
     });
 }
-const boldColor = (color)=>`color: ${color}; font-weight: bold;`
-;
+const boldColor = (color)=>`color: ${color}; font-weight: bold;`;
 const defaultEventColor = "#f012be";
-function logEvent({ component: component1 , e , module , color  }) {
+function logEvent({ component, e, module, color }) {
     if (typeof __DEV__ === "boolean" && !__DEV__) return;
     const event = e.type;
-    console.groupCollapsed(`${module}> %c${event}%c on %c${component1}`, boldColor(color || defaultEventColor), "", boldColor("#1a80cc"));
+    console.groupCollapsed(`${module}> %c${event}%c on %c${component}`, boldColor(color || defaultEventColor), "", boldColor("#1a80cc"));
     console.log(e);
     if (e.target) {
         console.log(e.target);
@@ -40,15 +39,15 @@ function assertComponentNameIsValid(name) {
     assert(typeof name === "string", "The name should be a string");
     assert(!!registry[name], `The component of the given name is not registered: ${name}`);
 }
-function component(name1) {
-    assert(typeof name1 === "string" && !!name1, "Component name must be a non-empty string");
-    assert(!registry[name1], `The component of the given name is already registered: ${name1}`);
-    const initClass = `${name1}-💊`;
+function component(name) {
+    assert(typeof name === "string" && !!name, "Component name must be a non-empty string");
+    assert(!registry[name], `The component of the given name is already registered: ${name}`);
+    const initClass = `${name}-💊`;
     const hooks = [
-        ({ el  })=>{
-            el.classList.add(name1);
+        ({ el })=>{
+            el.classList.add(name);
             el.classList.add(initClass);
-            el.addEventListener(`__ummount__:${name1}`, ()=>{
+            el.addEventListener(`__ummount__:${name}`, ()=>{
                 el.classList.remove(initClass);
             }, {
                 once: true
@@ -70,34 +69,34 @@ function component(name1) {
             });
         }
     };
-    initializer.sel = `.${name1}:not(.${initClass})`;
-    registry[name1] = initializer;
+    initializer.sel = `.${name}:not(.${initClass})`;
+    registry[name] = initializer;
     documentReady().then(()=>{
-        mount(name1);
+        mount(name);
     });
     const on = new Proxy(()=>{}, {
         set (_, type, value) {
-            return addEventBindHook(name1, hooks, mountHooks, type, value);
+            return addEventBindHook(name, hooks, mountHooks, type, value);
         },
         get (_, outside) {
             if (outside === "outside") {
                 return new Proxy({}, {
                     set (_, type, value) {
                         assert(typeof value === "function", `Event handler must be a function, ${typeof value} (${value}) is given`);
-                        hooks.push(({ el  })=>{
+                        hooks.push(({ el })=>{
                             const listener = (e)=>{
                                 if (el !== e.target && !el.contains(e.target)) {
                                     logEvent({
                                         module: "outside",
                                         color: "#39cccc",
                                         e,
-                                        component: name1
+                                        component: name
                                     });
                                     value(createEventContext(e, el));
                                 }
                             };
                             document.addEventListener(type, listener);
-                            el.addEventListener(`__unmount__:${name1}`, ()=>{
+                            el.addEventListener(`__unmount__:${name}`, ()=>{
                                 document.removeEventListener(type, listener);
                             }, {
                                 once: true
@@ -114,20 +113,19 @@ function component(name1) {
             assert(typeof selector === "string", "Delegation selector must be a string. ${typeof selector} is given.");
             return new Proxy({}, {
                 set (_, type, value) {
-                    return addEventBindHook(name1, hooks, mountHooks, type, value, selector);
+                    return addEventBindHook(name, hooks, mountHooks, type, value, selector);
                 }
             });
         }
     });
     const is = (name)=>{
-        hooks.push(({ el  })=>{
+        hooks.push(({ el })=>{
             el.classList.add(name);
         });
     };
-    const sub = (type)=>is(`sub:${type}`)
-    ;
+    const sub = (type)=>is(`sub:${type}`);
     const innerHTML = (html)=>{
-        hooks.push(({ el  })=>{
+        hooks.push(({ el })=>{
             el.innerHTML = html;
         });
     };
@@ -138,14 +136,12 @@ function component(name1) {
         innerHTML
     };
 }
-function createEventContext(e, el1) {
+function createEventContext(e, el) {
     return {
         e,
-        el: el1,
-        query: (s)=>el1.querySelector(s)
-        ,
-        queryAll: (s)=>el1.querySelectorAll(s)
-        ,
+        el,
+        query: (s)=>el.querySelector(s),
+        queryAll: (s)=>el.querySelectorAll(s),
         pub: (type, data)=>{
             document.querySelectorAll(`.sub\\:${type}`).forEach((el)=>{
                 el.dispatchEvent(new CustomEvent(type, {
@@ -153,12 +149,6 @@ function createEventContext(e, el1) {
                     detail: data
                 }));
             });
-        },
-        emit: (type, data)=>{
-            el1.dispatchEvent(new CustomEvent(type, {
-                bubbles: true,
-                detail: data
-            }));
         }
     };
 }
@@ -169,7 +159,7 @@ function addEventBindHook(name, hooks, mountHooks, type, handler, selector) {
         return true;
     }
     if (type === "__unmount__") {
-        hooks.push(({ el  })=>{
+        hooks.push(({ el })=>{
             el.addEventListener(`__unmount__:${name}`, ()=>{
                 handler(createEventContext(new CustomEvent("__unmount__"), el));
             }, {
@@ -178,10 +168,9 @@ function addEventBindHook(name, hooks, mountHooks, type, handler, selector) {
         });
         return true;
     }
-    hooks.push(({ el  })=>{
+    hooks.push(({ el })=>{
         const listener = (e)=>{
-            if (!selector || [].some.call(el.querySelectorAll(selector), (node)=>node === e.target || node.contains(e.target)
-            )) {
+            if (!selector || [].some.call(el.querySelectorAll(selector), (node)=>node === e.target || node.contains(e.target))) {
                 logEvent({
                     module: "💊",
                     color: "#e0407b",

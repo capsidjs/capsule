@@ -238,27 +238,6 @@ const EVENT = "my-event";
 }
 ```
 
-Bubbling events.
-
-```js
-import { component } from "https://deno.land/x/capsule@v0.5.3/dist.min.js";
-
-const { on } = component("my-component");
-
-const EVENT = "my-event";
-
-on.click = ({ emit }) => {
-  // dispatch CustomEvent of type "my-event"
-  // and it bubbles up.
-  emit(EVENT);
-
-  // dispatch CustomEvent of type "my-event"
-  // with details = { foo: "bar" };
-  // and it bubbles up.
-  emit(EVENT, { foo: "bar" }); // dispatch
-};
-```
-
 Mount hooks.
 
 ```js
@@ -446,7 +425,6 @@ type EventHandler = (ctx: ComponentEventContext) => void;
 interface ComponentEventContext {
   e: Event;
   el: Element;
-  emit<T = unknown>(name: string, data: T): void;
   pub<T = unknown>(name: string, data: T): void;
   query(selector: string): Element | null;
   queryAll(selector: string): NodeListOf<Element> | null;
@@ -458,11 +436,6 @@ interface ComponentEventContext {
 
 `el` is the DOM Element, which the event handler is bound to, and the event is
 dispatched on.
-
-`emit(type)` dispatches the event on this DOM Element. The event bubbles up. So
-the parent component can handle those events. If you'd like to communicate with
-the parent elements, then use this method to send information to parent
-elements.
 
 You can optionally attach data to the event. The attached data is available via
 `.detail` property of `CustomEvent` object.

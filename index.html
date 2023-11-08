@@ -156,47 +156,6 @@ on.outside.click = ({ el }) => {
   <hr class="my-10 -mx-2 lg:mx-2" />
 
   <section class="example">
-    <h2 class="text-lg font-medium">Emit event example</h2>
-    <p>If you "emit" events, they bubbles up to the parent and ancestors.</p>
-    <template>
-<div class="grandparent border rounded p-2">
-  Grandparent
-  <div class="parent border rounded p-2">
-    Parent
-    <button class="child border rounded">btn</button>
-  </div>
-</div>
-    </template>
-    <h3 class="mt-10">JS</h3>
-    <pre class="js-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2">const EVENT = "my-event";
-{
-  const { on } = component("grandparent");
-  on[EVENT] = ({ el }) => {
-    el.appendChild(new Text(` Got ${EVENT}`));
-  };
-}
-{
-  const { on } = component("parent");
-  on[EVENT] = ({ el }) => {
-    el.appendChild(new Text(` Got ${EVENT}`));
-  };
-}
-{
-  const { on } = component("child");
-
-  on.click = ({ emit }) => {
-    emit(EVENT);
-  };
-}</pre>
-    <h3 class="mt-10">HTML</h3>
-    <pre class="html-source overflow-x-scroll lg:rounded-lg shadow-lg bg-gray-800 text-gray-100 p-5 mt-5 -mx-2"></pre>
-    <h3 class="mt-10">Result</h3>
-    <div class="result border rounded-lg p-5 mt-5"></div>
-  </section>
-
-  <hr class="my-10 -mx-2 lg:mx-2" />
-
-  <section class="example">
     <h2 class="text-lg font-medium">Prevent default example</h2>
     <p>If you need to preventDefault or stopPropagation, you can access it via '.e' prop.</p>
     <template>
