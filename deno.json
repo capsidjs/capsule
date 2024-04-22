@@ -2,7 +2,7 @@
   "name": "@kt3k/capsule",
   "version": "0.6.0",
   "exports": {
-    ".": "mod.ts"
+    ".": "./mod.ts"
   },
   "compilerOptions": {
     "lib": ["deno.ns", "deno.unstable", "dom", "esnext"]
