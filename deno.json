@@ -2,16 +2,7 @@
   "compilerOptions": {
     "lib": ["deno.ns", "deno.unstable", "dom", "esnext"]
   },
-  "fmt": {
-    "files": {
-      "exclude": ["node", "dist.js", "dist.min.js"]
-    }
-  },
-  "lint": {
-    "files": {
-      "exclude": ["node", "dist.js", "dist.min.js"]
-    }
-  },
+  "exclude": ["node", "dist.js", "dist.min.js"],
   "tasks": {
     "test": "deno test --config deno.json -A --unstable --ignore=node",
     "cov": "deno test --config deno.json --coverage=cov -A --unstable --no-check --ignore=node",
