@@ -16,10 +16,8 @@
     "dist": "deno run -A jsr:@kt3k/pack mod.ts > dist.js",
     "min": "deno run -A npm:terser --compress --mangle --toplevel -o dist.min.js -- dist.js",
     "size": "deno run --allow-read https://deno.land/x/gzip_size@v0.3.0/cli.ts --include-original dist.min.js",
-    "dnt": "deno run -A dnt.ts",
     "twd": "deno run -A --allow-read=. --allow-write=style.css --allow-net=deno.land,esm.sh,cdn.esm.sh https://deno.land/x/twd@v0.4.8/cli.ts -o style.css index.html",
     "twd-w": "deno task twd -- -w",
-    "npm-publish": "rm -rf node && deno task dnt && cd node && npm publish",
     "start": "deno run --allow-read=. --allow-net=0.0.0.0:8000 deploy.ts"
   },
   "imports": {
