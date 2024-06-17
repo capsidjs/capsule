@@ -8,5 +8,4 @@ files:
     - 'https://deno.land/x/capsule@v%.%.%/dist.min.js'
     - 'https://deno.land/x/capsule@v%.%.%/loader.js'
   mod.ts: Capsule v%.%.%
-  dnt.ts: 'version: "%.%.%"'
   deno.json: '"version": "%.%.%"'
