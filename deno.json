@@ -9,11 +9,11 @@
   },
   "exclude": ["node", "dist.js", "dist.min.js"],
   "tasks": {
-    "test": "deno test --config deno.json -A --unstable --ignore=node",
-    "cov": "deno test --config deno.json --coverage=cov -A --unstable --no-check --ignore=node",
+    "test": "deno test -A",
+    "cov": "deno test --coverage -A",
     "lcov": "deno coverage --lcov cov > lcov.info",
-    "html_cov": "genhtml -o html_cov lcov.info",
-    "dist": "deno bundle --config deno.json mod.ts > dist.js",
+    "html_cov": "deno coverage --html",
+    "dist": "deno run -A jsr:@kt3k/pack mod.ts > dist.js",
     "min": "deno run -A npm:terser --compress --mangle --toplevel -o dist.min.js -- dist.js",
     "size": "deno run --allow-read https://deno.land/x/gzip_size@v0.3.0/cli.ts --include-original dist.min.js",
     "dnt": "deno run -A dnt.ts",
@@ -21,5 +21,8 @@
     "twd-w": "deno task twd -- -w",
     "npm-publish": "rm -rf node && deno task dnt && cd node && npm publish",
     "start": "deno run --allow-read=. --allow-net=0.0.0.0:8000 deploy.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^0.226.0"
   }
 }

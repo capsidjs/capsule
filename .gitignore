@@ -1,5 +1,3 @@
-/cov
-/html_cov
+/coverage
 /lcov.info
-/.vscode
 /node

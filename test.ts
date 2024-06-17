@@ -1,10 +1,6 @@
 // Copyright 2022 Yoshiya Hinosawa. All rights reserved. MIT license.
 
-import {
-  assert,
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std@0.135.0/testing/asserts.ts";
+import { assert, assertEquals, assertThrows } from "@std/assert";
 import "./dom_polyfill_deno.ts";
 import { component, mount, unmount } from "./mod.ts";
 
